@@ -12,8 +12,6 @@ class entrepriseController extends Controller
     public function index()
     {
         return view("entreprise.index",['ent' => DB::table('entreprise_models')->get()]);
-
-
     }
 
     public function store (Request $request)

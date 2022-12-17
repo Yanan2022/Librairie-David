@@ -3,7 +3,7 @@
 <head>
 	<base href="/" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Livre moi</title>
+	<title>Tableau de bord</title>
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 	<link rel="stylesheet" href="fontend/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -38,7 +38,7 @@
 		<div class="main-header">
 			<div class="logo-header">
 				<a href="#" class="logo">
-					Livraison Dashboard
+					Librairie Tableau de bord
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -143,8 +143,21 @@
 									<a class="dropdown-item" href="#"><i class="ti-email"></i> Inbox</a>
 									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="fa fa-power-off"></i> Logout</a>
+									<div class="dropdown-divider">
+
+                                    </div>
+									{{-- <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a> --}}
+
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+
 								</ul>
 								<!-- /.dropdown-user -->
 							</li>
@@ -161,8 +174,8 @@
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									SALIA
-									<span class="user-level">Administrator</span>
+									Touré Yanan
+									<span class="user-level">Administrateur</span>
 									<span class="caret"></span>
 								</span>
 							</a>
@@ -172,17 +185,17 @@
 								<ul class="nav">
 									<li>
 										<a href="#profile">
-											<span class="link-collapse">My Profile</span>
+											<span class="link-collapse">Mon Profil</span>
 										</a>
 									</li>
 									<li>
 										<a href="#edit">
-											<span class="link-collapse">Edit Profile</span>
+											<span class="link-collapse">Editer Profil</span>
 										</a>
 									</li>
 									<li>
 										<a href="#settings">
-											<span class="link-collapse">Settings</span>
+											<span class="link-collapse">Paramètres</span>
 										</a>
 									</li>
 								</ul>
@@ -206,21 +219,21 @@
                         <li class="nav-item">
 							<a href="/catArt">
 								<i class="la la-folder-o"></i>
-								<p>Categorie article</p>
+								<p>Categorie Kits</p>
 
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="/article">
 								<i class="la la-keyboard-o"></i>
-								<p>Article</p>
+								<p>Kits</p>
 
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="/catal">
+							<a href="{{route('accueil')}}">
 								<i class="la la-keyboard-o"></i>
-								<p>Catalogue</p>
+								<p>Libraire David</p>
 
 							</a>
 						</li>

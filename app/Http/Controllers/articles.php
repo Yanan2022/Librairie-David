@@ -13,6 +13,13 @@ class articles extends Controller
     {
         return view('articles.index', ['articles' => DB::table('tb_articles')->get()]);
     }
+
+    public function show(Tb_articles $article)
+    {
+        //return $article;
+        return view("front.article.detail", compact('article'));
+    }
+
      //Enregistrement d'un article
      public function store(Request $request)
      {

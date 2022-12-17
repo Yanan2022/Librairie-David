@@ -14,12 +14,13 @@ class PanierController extends Controller
     {
         $panier = $this->_getPanier($request);
 
-        return view("panier", compact('panier'));
+        return view("front.panier.panier", compact('panier'));
     }
 
 
     public function ajouterArticle(Request $request, Tb_articles $article)
     {
+
         $panier = $this->_getPanier($request);
 
         $panier->addArticle($article, 1)->refresh();

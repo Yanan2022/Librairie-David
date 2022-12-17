@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\CommandeController;
 use App\Http\Controllers\Api\CategorieEntrepriseController;
 use App\Http\Controllers\Api\TypeArticleController;
 use App\Http\Controllers\Api\ArticleController;
+
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,3 +42,7 @@ Route::get('entreprises/{entreprise}', [EntrepriseController::class, 'show']);
 Route::get('types-articles', [TypeArticleController::class, 'index']);
 Route::get('articles', [ArticleController::class, 'index']);
 Route::get('articles/{article}', [ArticleController::class, 'show']);
+
+//api
+Route::post('/upload', [HomeController::class, 'upload']);
+Route::get('/search', [HomeController::class, 'query_get_search_dynamique']);

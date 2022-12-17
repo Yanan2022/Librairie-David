@@ -1,4 +1,4 @@
-@extends("layouts")
+@extends("front.layouts.app")
 @section('title')
     Nouvelle commande
 @endsection
@@ -41,12 +41,12 @@
                         <p class="row-in-form">
                             <label for="phone">Numéro de téléphone<span>*</span></label>
                             <input id="phone" type="text" name="telephone" value="{{ old('telephone') }}"
-                                placeholder="Au format 10 chiffres" required>
+                                placeholder="00 00 00 00 00/00 00 00 00 00" required>
                         </p>
-                        <p class="row-in-form">
+                        {{--<p class="row-in-form">
                             <label for="add">Adresse<span>*</span></label>
                             <input id="add" type="text" name="adresse" value="{{ old('adresse') }}" required />
-                        </p>
+                        </p> --}}
                         <p class="row-in-form">
                             <label for="city">Ville<span>*</span></label>
                             <input id="city" type="text" name="ville" value="{{ old('ville') }}" required>
@@ -98,7 +98,7 @@
                             </div>
                             <p class="summary-info grand-total"><span>Grand Total</span> <span
                                     class="grand-total-price">{{ $panier->total }} FCFA</span></p>
-                            <button type="submit" class="btn btn-medium">Soumettre ma commande</button>
+                            <button type="submit" class="btn btn-medium">Valider ma commande</button>
                         </div>
                         <div class="summary-item shipping-method">
                             <h4 class="title-box f-title">Livraison</h4>

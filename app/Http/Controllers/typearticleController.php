@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\typearticleModel;
+use App\Models\EntrepriseModel;
+use App\Models\Tb_articles;
 
 class typearticleController extends Controller
 {
@@ -13,6 +15,21 @@ class typearticleController extends Controller
         return view("categoriearticle.index", [
             'categart' => typearticleModel::with('type_parent')->get(),
         ]);
+    }
+
+    public function show($id)
+    {
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+         $articles = Tb_articles::where('IdTypeArticle', '=', $id)
+                                 ->paginate(6);
+        //return $articles;
+        return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+        // return view('front.catalogue.show', [
+        //     'categories' => typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get(),
+        //     'entreprises' => EntrepriseModel::orderBy('LibelleEntreprise')->get(),
+        //     'articles' => Tb_articles::with(['type', 'entreprise'])->get(),
+        // ]);
     }
 
 

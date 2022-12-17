@@ -42,21 +42,27 @@
         <div class="container-fluid">
             <div class="row">
 
-                <div class="topbar-menu-area">
+                {{--<div class="topbar-menu-area">
                     <div class="container">
                         <div class="topbar-menu left-menu">
                             <ul>
                                 <li class="menu-item">
-                                    <a title="Hotline: (+123) 456 789" href="#"><span
-                                            class="icon label-before fa fa-mobile"></span>Hotline: (+123) 456 789</a>
+
+                                        <span
+                                            class="icon label-before fa fa-mobile">
+                                        </span>Hotline:  (+225) 07 57 95 25 55
+
                                 </li>
                             </ul>
                         </div>
                         <div class="topbar-menu right-menu">
                             <ul>
-                                <li class="menu-item"><a title="Register or Login" href="login.html">Login</a></li>
-                                <li class="menu-item"><a title="Register or Login"
-                                        href="register.html">Register</a></li>
+                                <li class="menu-item"><a title="Register or Login" href="{{ route('login') }}">Connexion</a></li>
+                                <li class="menu-item">
+                                    <a title="Register or Login" href="{{ route('register') }}">
+                                        S'enregistrer
+                                    </a>
+                                </li>
                                 <li class="menu-item lang-menu menu-item-has-children parent">
                                     <a title="English" href="#"><span class="img label-before"><img
                                                 src="assets/images/lang-en.png" alt="lang-en"></span>English<i
@@ -94,25 +100,26 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div>--}}
 
                 <div class="container">
                     <div class="mid-section main-info-area">
 
                         <div class="wrap-logo-top left-section">
-                            <a href="index.html" class="link-to-home"><img src="assets/images/logo-top-1.png"
-                                    alt="mercado"></a>
+                            <a href="index.html" class="link-to-home">
+                                <img src="{{asset('logo.png')}}" alt="mercado">
+                            </a>
                         </div>
 
                         <div class="wrap-search center-section">
                             <div class="wrap-search-form">
                                 <form action="#" id="form-search-top" name="form-search-top">
-                                    <input type="text" name="search" value="" placeholder="Search here...">
+                                    <input type="text" name="search" value="" placeholder="Rechercher">
                                     <button form="form-search-top" type="button"><i class="fa fa-search"
                                             aria-hidden="true"></i></button>
-                                    <div class="wrap-list-cate">
+                                    {{-- <div class="wrap-list-cate">
                                         <input type="hidden" name="product-cate" value="0" id="product-cate">
-                                        <a href="#" class="link-control">All Category</a>
+                                        <a href="#" class="link-control">Categories</a>
                                         <ul class="list-cate">
                                             <li class="level-0">All Category</li>
                                             <li class="level-1">-Electronics</li>
@@ -132,7 +139,7 @@
                                             <li class="level-2">Mp3 Player & Headphones</li>
                                             <li class="level-2">Table & Accessories</li>
                                         </ul>
-                                    </div>
+                                    </div> --}}
                                 </form>
                             </div>
                         </div>
@@ -151,16 +158,15 @@
                                 <a href="#" class="link-direction">
                                     <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                                     <div class="left-info">
-                                        <span class="index">4 items</span>
-                                        <span class="title">CART</span>
+                                        <span class="index">0</span>
+                                        <span class="title">Panier</span>
                                     </div>
                                 </a>
                             </div>
+
                             <div class="wrap-icon-section show-up-after-1024">
                                 <a href="#" class="mobile-navigation">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
+                                    Compte
                                 </a>
                             </div>
                         </div>
@@ -169,7 +175,7 @@
                 </div>
 
                 <div class="nav-section header-sticky">
-                    <div class="header-nav-section">
+                    {{--<div class="header-nav-section">
                         <div class="container">
                             <ul class="nav menu-nav clone-main-menu" id="mercado_haead_menu" data-menuname="Sale Info">
                                 <li class="menu-item"><a href="#" class="link-term">Weekly Featured</a><span
@@ -184,7 +190,7 @@
                                         class="nav-label hot-label">hot</span></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="primary-nav-section">
                         <div class="container">
@@ -194,16 +200,19 @@
                                             aria-hidden="true"></i></a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="about-us.html" class="link-term mercado-item-title">About Us</a>
+                                    <a href="#" class="link-term mercado-item-title">Découvrez nos cartes</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="shop.html" class="link-term mercado-item-title">Shop</a>
+                                    <a href="#" class="link-term mercado-item-title">Commmande spéciale</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="cart.html" class="link-term mercado-item-title">Cart</a>
+                                    <a href="#" class="link-term mercado-item-title">Réclamations et Suggestions</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="contact-us.html" class="link-term mercado-item-title">Contact Us</a>
+                                    <a href="#" class="link-term mercado-item-title">Boutiques</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ route('login') }}" class="link-term mercado-item-title">Compte</a>
                                 </li>
                             </ul>
                         </div>
@@ -222,23 +231,28 @@
             <div class="wrap-function-info">
                 <div class="container">
                     <ul>
-                        <li class="fc-info-item">
-                            <i class="fa fa-truck" aria-hidden="true"></i>
-                            <div class="wrap-left-info">
-                                <h4 class="fc-name">Free Shipping</h4>
-                                <p class="fc-desc">Free On Oder Over $99</p>
-                            </div>
 
-                        </li>
                         <li class="fc-info-item">
                             <i class="fa fa-recycle" aria-hidden="true"></i>
                             <div class="wrap-left-info">
-                                <h4 class="fc-name">Guarantee</h4>
-                                <p class="fc-desc">30 Days Money Back</p>
+                                <h4 class="fc-name">Newletter</h4>
+                                <p class="fc-desc">Rejoignez notre newsletter maintenant</p>
                             </div>
 
                         </li>
                         <li class="fc-info-item">
+                            <div class="wrap-left-info">
+                                <div class="wrap-search center-section">
+                                    <div class="wrap-search-form">
+                                        <form action="#" id="form-search-top" name="form-search-top">
+                                            <input type="text" name="search" value="" placeholder="Rechercher">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>
+                        {{--<li class="fc-info-item">
                             <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
                             <div class="wrap-left-info">
                                 <h4 class="fc-name">Safe Payment</h4>
@@ -253,7 +267,7 @@
                                 <p class="fc-desc">We Have Support 24/7</p>
                             </div>
 
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             </div>
@@ -267,22 +281,21 @@
 
                         <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                             <div class="wrap-footer-item">
-                                <h3 class="item-header">Contact Details</h3>
+                                <h3 class="item-header">Contact</h3>
                                 <div class="item-content">
                                     <div class="wrap-contact-detail">
                                         <ul>
                                             <li>
                                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                                <p class="contact-txt">45 Grand Central Terminal New York,NY 1017
-                                                    United State USA</p>
+                                                <p class="contact-txt">Riviera palmeraie bonoumin entre le rond point ADO et le restaurant la Shish</p>
                                             </li>
                                             <li>
                                                 <i class="fa fa-phone" aria-hidden="true"></i>
-                                                <p class="contact-txt">(+123) 456 789 - (+123) 666 888</p>
+                                                <p class="contact-txt">(+225) 07 57 95 25 55 </p>
                                             </li>
                                             <li>
                                                 <i class="fa fa-envelope" aria-hidden="true"></i>
-                                                <p class="contact-txt">Contact@yourcompany.com</p>
+                                                <p class="contact-txt"> info@librairiedavidcenter.ci</p>
                                             </li>
                                         </ul>
                                     </div>
@@ -292,7 +305,7 @@
 
                         <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
 
-                            <div class="wrap-footer-item">
+                            {{--<div class="wrap-footer-item">
                                 <h3 class="item-header">Hot Line</h3>
                                 <div class="item-content">
                                     <div class="wrap-hotline-footer">
@@ -300,10 +313,10 @@
                                         <b class="phone-number">(+123) 456 789 - (+123) 666 888</b>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="wrap-footer-item footer-item-second">
-                                <h3 class="item-header">Sign up for newsletter</h3>
+                                <h3 class="item-header">Newsletter</h3>
                                 <div class="item-content">
                                     <div class="wrap-newletter-footer">
                                         <form action="#" class="frm-newletter" id="frm-newletter">
@@ -320,39 +333,50 @@
                         <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12 box-twin-content ">
                             <div class="row">
                                 <div class="wrap-footer-item twin-item">
-                                    <h3 class="item-header">My Account</h3>
+                                    <h3 class="item-header">Mon compte</h3>
                                     <div class="item-content">
                                         <div class="wrap-vertical-nav">
                                             <ul>
-                                                <li class="menu-item"><a href="#" class="link-term">My
-                                                        Account</a></li>
+                                                <li class="menu-item">
+                                                    <a href="#" class="link-term">
+                                                      Information personnelle
+                                                    </a>
+                                                </li>
                                                 <li class="menu-item"><a href="#"
-                                                        class="link-term">Brands</a></li>
-                                                <li class="menu-item"><a href="#" class="link-term">Gift
-                                                        Certificates</a></li>
-                                                <li class="menu-item"><a href="#"
-                                                        class="link-term">Affiliates</a></li>
-                                                <li class="menu-item"><a href="#" class="link-term">Wish
-                                                        list</a></li>
+                                                        class="link-term">Commandes</a></li>
+                                                <li class="menu-item">
+                                                    <a href="#" class="link-term">Avoirs
+                                                        Adresses</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="#" class="link-term">
+                                                        Bon de réductions
+                                                    </a>
+                                                </li>
+
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="wrap-footer-item twin-item">
-                                    <h3 class="item-header">Infomation</h3>
+                                    <h3 class="item-header">Notre société</h3>
                                     <div class="item-content">
                                         <div class="wrap-vertical-nav">
                                             <ul>
-                                                <li class="menu-item"><a href="#" class="link-term">Contact
-                                                        Us</a></li>
-                                                <li class="menu-item"><a href="#"
-                                                        class="link-term">Returns</a></li>
-                                                <li class="menu-item"><a href="#" class="link-term">Site
-                                                        Map</a></li>
-                                                <li class="menu-item"><a href="#"
-                                                        class="link-term">Specials</a></li>
-                                                <li class="menu-item"><a href="#" class="link-term">Order
-                                                        History</a></li>
+                                                <li class="menu-item"><a href="#" class="link-term">Livraison
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item"><a href="#" class="link-term">
+                                                    Mentions légales</a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="#" class="link-term">
+                                                     Conditions d'utilisation
+                                                    </a>
+                                                </li>
+                                                <li class="menu-item">
+                                                    <a href="#" class="link-term">Nos boutiques LD | Librairie David</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -366,7 +390,7 @@
 
                         <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                             <div class="wrap-footer-item">
-                                <h3 class="item-header">We Using Safe Payments:</h3>
+                                <h3 class="item-header">Nous utilisons des paiements sécurisés:</h3>
                                 <div class="item-content">
                                     <div class="wrap-list-item wrap-gallery">
                                         <img src="assets/images/payment.png" style="max-width: 260px;">
@@ -377,7 +401,7 @@
 
                         <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                             <div class="wrap-footer-item">
-                                <h3 class="item-header">Social network</h3>
+                                <h3 class="item-header">Réseau social</h3>
                                 <div class="item-content">
                                     <div class="wrap-list-item social-network">
                                         <ul>
@@ -397,7 +421,7 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
+                        {{-- <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
                             <div class="wrap-footer-item">
                                 <h3 class="item-header">Dowload App</h3>
                                 <div class="item-content">
@@ -417,12 +441,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>
 
-                <div class="wrap-back-link">
+                {{-- <div class="wrap-back-link">
                     <div class="container">
                         <div class="back-link-box">
                             <h3 class="backlink-title">Quick Links</h3>
@@ -494,17 +518,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 
             <div class="coppy-right-box">
                 <div class="container">
                     <div class="coppy-right-item item-left">
-                        <p class="coppy-right-text">Copyright © 2020 Surfside Media. All rights reserved</p>
+                        <p class="coppy-right-text">Copyright © 2022 David Librairie. Tous les droits sont réservés</p>
                     </div>
                     <div class="coppy-right-item item-right">
-                        <div class="wrap-nav horizontal-nav">
+                        {{-- <div class="wrap-nav horizontal-nav">
                             <ul>
                                 <li class="menu-item"><a href="about-us.html" class="link-term">About us</a>
                                 </li>
@@ -515,7 +539,7 @@
                                 <li class="menu-item"><a href="return-policy.html" class="link-term">Return
                                         Policy</a></li>
                             </ul>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="clearfix"></div>
                 </div>
