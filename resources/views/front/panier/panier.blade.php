@@ -36,10 +36,12 @@
                                 <div class="quantity">
                                     <div class="quantity-input">
                                         <input type="text" name="product-quatity" value="{{ $article->pivot->quantite }}" data-max="120" pattern="[0-9]*" readonly>
-                                        <a class="btn btn-increase" href="{{ route('panier.ajouter-article', ["article" => $article->id, "qte" => 1]) }}">
-                                            +
+                                        <a href="{{ route('panier.retirer-article', ["article" => $article->id, "qte" => 1]) }}">
+                                            <img src="{{ asset('boutons/moins.png') }}" alt="moins">
                                         </a>
-                                        <a class="btn btn-reduce" href="{{ route('panier.retirer-article', ["article" => $article->id, "qte" => 1]) }}"></a>
+                                        <a href="{{ route('panier.ajouter-article', ["article" => $article->id, "qte" => 1]) }}">
+                                            <img src="{{ asset('boutons/plus.png') }}" alt="plus">
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="price-field sub-total">

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Panier;
 use Illuminate\Http\Request;
 use App\Models\Tb_articles;
+use App\Models\Tb_kit;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
+use Session;
 
 class PanierController extends Controller
 {
@@ -24,6 +26,19 @@ class PanierController extends Controller
         $panier = $this->_getPanier($request);
 
         $panier->addArticle($article, 1)->refresh();
+
+        Session::put('panier', $panier);
+
+        return redirect()->route("panier.index");
+    }
+
+    public function ajouterKit(Request $request, Tb_kit $kit)
+    {
+        $panier = $this->_getPanier($request);
+
+        return $panier->addKit($kit, 1)->refresh();
+
+        Session::put('panier', $panier);
 
         return redirect()->route("panier.index");
     }

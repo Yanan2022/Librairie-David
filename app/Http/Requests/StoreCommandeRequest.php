@@ -32,7 +32,7 @@ class StoreCommandeRequest extends FormRequest
             "ville" => "required|string|max:160",
             "commune" => "required|string|max:160",
             "quartier" => "nullable|string|max:160",
-            "adresse" => "required|string|max:250",
+            //"adresse" => "required|string|max:250",
             "coordonnees" => "sometimes|array|size:2",
         ];
     }

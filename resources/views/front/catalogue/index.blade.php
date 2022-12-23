@@ -7,9 +7,7 @@
 @section('content')
     <!--main area-->
     <main id="main" class="main-site left-sidebar">
-
         <div class="container">
-
             <div class="wrap-breadcrumb">
                 <ul>
                     <li class="item-link"><a href="{{ url('/') }}" class="link">Accueil</a></li>
@@ -17,45 +15,36 @@
                 </ul>
             </div>
             <div class="row">
-
                 <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12 main-content-area">
-
-                    <div class="banner-shop" style="margin-top: -6%">
+                    <div class="wrap-shop-control" style="margin-top: -9%">
+                        <div class="container pb-60">
+                            <div class="row">
+                                <div style="margin-left: 12%">
+                                    <h3 style="margin-left: 8%" style="text-align: center;"><strong> Scanner votre liste de fourniture !</strong></h3>
+                                        <form action="{{ route('upload') }}" method="POST" enctype="multipart/form-data" class="form-inline">
+                                            @csrf
+                                            <input type="file" name="image" class="form-control mb-2 mr-sm-2">
+                                            <div class="input-group mb-2 mr-sm-2">
+                                              <input type="text" name="classe" class="form-control mb-2 mr-sm-2" placeholder="Entrez la classe">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary mb-2">Valider</button>
+                                          </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="banner-shop" style="margin-top: 2%">
                         <a href="#" class="banner-link">
                             {{--<figure><img src="assets/images/shop-banner.jpg" alt=""></figure>  --}}
                             <figure><img src="{{ asset('shop-banner.jpg') }}" alt=""></figure>
                         </a>
                     </div>
-                    <div class="row">
-                        <div class="wrap-shop-control">
-
-                            <h1 class="shop-title">Scanner votre liste de fourniture</h1><br>
-
-                            <div class="wrap-right">
-
-                                <div class="sort-item orderby ">
-                                    <label for="validationDefault01">First name</label>
-                                    <input type="text" class="form-control" id="validationDefault01" placeholder="First name" value="Mark" required>
-                                </div>
-
-                                <div class="sort-item orderby ">
-                                    <label for="validationDefault01">Photo</label>
-                                    <input type="file" class="form-control" id="validationDefault01" placeholder="First name" value="Mark" required>
-                                </div>
-
-                                <div class="sort-item orderby ">
-                                    <button type="submit" class="btn btn-primary">Valider</button>
-                                </div>
 
 
 
-                            </div>
-
-                        </div>
-                    </div>
                     <!--end wrap shop control-->
 
-                    {{--<div class="row">
+                    <div class="row">
 
                         <ul class="product-list grid-products equal-container">
 
@@ -88,7 +77,7 @@
 
                     </div>
 
-                    <div class="wrap-pagination-info">
+                    {{--<div class="wrap-pagination-info">
                         <ul class="page-numbers">
                             <li><span class="page-number-item current">1</span></li>
                             <li><a class="page-number-item" href="#">2</a></li>
@@ -96,7 +85,7 @@
                             <li><a class="page-number-item next-link" href="#">Suivant</a></li>
                         </ul>
                         <p class="result-count">Montrer 1-8 of 12 résultat</p>
-                    </div>--}}
+                    </div> --}}
                 </div>
                 <!--end main products area-->
 
@@ -128,35 +117,7 @@
                         </div>
                     </div><!-- Categories widget-->
 
-                    {{--<div class="widget mercado-widget filter-widget brand-widget">
-                        <h2 class="widget-title">Marques</h2>
-                        <div class="widget-content">
-                            <ul class="list-style vertical-list list-limited" data-show="6">
-                                @foreach ($entreprises as $key => $marque)
-                                    <li class="list-item">
-                                        <a class="filter-link active"
-                                            href="{{ route('entreprises.show', $marque) }}">{{ $marque->LibelleEntreprise }}</a>
-                                    </li>
-                                @endforeach
-                                <li class="list-item"><a
-                                        data-label='Afficher moins<i class="fa fa-angle-up" aria-hidden="true"></i>'
-                                        class="btn-control control-show-more" href="#">Afficher plus <i
-                                            class="fa fa-angle-down" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div>
-                    </div> --}}<!-- brand widget-->
-
-                    {{-- <div class="widget mercado-widget filter-widget price-filter">
-                        <h2 class="widget-title">Prix</h2>
-                        <div class="widget-content">
-                            <div id="slider-range"></div>
-                            <p>
-                                <label for="amount">Prix:</label>
-                                <input type="text" id="amount" readonly>
-                                <button class="filter-submit">Filtrer</button>
-                            </p>
-                        </div>
-                    </div> --}}<!-- Price-->
+                    <!-- Price-->
 
                     <div class="widget mercado-widget filter-widget">
                         <h2 class="widget-title">Classe</h2>
@@ -219,109 +180,11 @@
                         </div>
                     </div>
                     <!-- Color -->
-
-                    {{--<div class="widget mercado-widget filter-widget">
-                         <h2 class="widget-title">Size</h2>
-                        <div class="widget-content">
-                            <ul class="list-style inline-round ">
-                                <li class="list-item"><a class="filter-link active" href="#">s</a></li>
-                                <li class="list-item"><a class="filter-link " href="#">M</a></li>
-                                <li class="list-item"><a class="filter-link " href="#">l</a></li>
-                                <li class="list-item"><a class="filter-link " href="#">xl</a></li>
-                            </ul>
-                            <div class="widget-banner">
-                                <figure>
-                                    <img src="{{ asset('catalogue/assets/images/size-banner-widget.jpg')}}" width="270" height="331"
-                                        alt="">
-                                    </figure>
-                            </div>
-                        </div>
-                    </div>--}}<!-- Size -->
-
-                    {{--<div class="widget mercado-widget widget-product">
-                        <h2 class="widget-title">Articles populaires</h2>
-                        <div class="widget-content">
-                            <ul class="products">
-                                <li class="product-item">
-                                    <div class="product product-widget-style">
-                                        <div class="thumbnnail">
-                                            <a href="detail.html"
-                                                title="Radiant-360 R6 Wireless Omnidirectional Speaker [White]">
-                                                <figure><img src="{{ asset('catalogue/assets/images/products/digital_01.jpg') }}" alt="">
-                                                </figure>
-                                            </a>
-                                        </div>
-                                        <div class="product-info">
-                                            <a href="#" class="product-name"><span>Radiant-360 R6 Wireless
-                                                    Omnidirectional Speaker...</span></a>
-                                            <div class="wrap-price"><span class="product-price">$168.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="product-item">
-                                    <div class="product product-widget-style">
-                                        <div class="thumbnnail">
-                                            <a href="detail.html"
-                                                title="Radiant-360 R6 Wireless Omnidirectional Speaker [White]">
-                                                <figure><img src="{{asset('catalogue/assets/images/products/digital_17.jpg')}}" alt="">
-                                                </figure>
-                                            </a>
-                                        </div>
-                                        <div class="product-info">
-                                            <a href="#" class="product-name"><span>Radiant-360 R6 Wireless
-                                                    Omnidirectional Speaker...</span></a>
-                                            <div class="wrap-price"><span class="product-price">$168.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="product-item">
-                                    <div class="product product-widget-style">
-                                        <div class="thumbnnail">
-                                            <a href="detail.html"
-                                                title="Radiant-360 R6 Wireless Omnidirectional Speaker [White]">
-                                                <figure><img src="{{asset('catalogue/assets/images/products/digital_18.jpg')}}" alt="">
-                                                </figure>
-                                            </a>
-                                        </div>
-                                        <div class="product-info">
-                                            <a href="#" class="product-name"><span>Radiant-360 R6 Wireless
-                                                    Omnidirectional Speaker...</span></a>
-                                            <div class="wrap-price"><span class="product-price">$168.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <li class="product-item">
-                                    <div class="product product-widget-style">
-                                        <div class="thumbnnail">
-                                            <a href="detail.html"
-                                                title="Radiant-360 R6 Wireless Omnidirectional Speaker [White]">
-                                                <figure><img src="{{asset('catalogue/assets/images/products/digital_20.jpg')}}" alt="">
-                                                </figure>
-                                            </a>
-                                        </div>
-                                        <div class="product-info">
-                                            <a href="#" class="product-name"><span>Radiant-360 R6 Wireless
-                                                    Omnidirectional Speaker...</span></a>
-                                            <div class="wrap-price"><span class="product-price">$168.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>
-                    </div> --}}
                     <!-- brand widget-->
 
                 </div>
                 <!--end sitebar-->
-                <div class="wrap-show-advance-info-box style-1 box-in-site" style="background-color: white">
+                <div class="wrap-show-advance-info-box style-1 box-in-site">
                     <h3 class="title-box">Les nouveaux produits</h3>
                     <div class="wrap-products">
                         <div class="products slide-carousel owl-carousel style-nav-1 equal-container" data-items="5"
@@ -443,7 +306,7 @@
                     <!--End wrap-products-->
                 </div>
 
-                <div class="wrap-show-advance-info-box style-1 box-in-site" style="background-color: white">
+                <div class="wrap-show-advance-info-box style-1 box-in-site">
                     <h3 class="title-box">Offrez-vous un ordinateur pour la rentrée</h3>
                     <div class="wrap-products">
                         <div class="products slide-carousel owl-carousel style-nav-1 equal-container" data-items="5"

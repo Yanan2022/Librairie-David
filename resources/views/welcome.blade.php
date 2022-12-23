@@ -219,15 +219,21 @@
                         <li class="nav-item">
 							<a href="/catArt">
 								<i class="la la-folder-o"></i>
-								<p>Categorie Kits</p>
+								<p>Categorie Artcles</p>
 
 							</a>
 						</li>
 						<li class="nav-item">
 							<a href="/article">
 								<i class="la la-keyboard-o"></i>
-								<p>Kits</p>
+								<p>Articles</p>
 
+							</a>
+						</li>
+                        <li class="nav-item">
+							<a href="{{route('kits.index')}}">
+								<i class="la la-keyboard-o"></i>
+								<p>Kits</p>
 							</a>
 						</li>
 						<li class="nav-item">

@@ -35,7 +35,7 @@
                             <input id="lname" type="text" name="nom" value="{{ old('nom') }}" required />
                         </p>
                         <p class="row-in-form">
-                            <label for="email">Adresse E-mail:</label>
+                            <label for="email">E-mail:</label>
                             <input id="email" type="email" name="email" value="{{ old('email') }}">
                         </p>
                         <p class="row-in-form">

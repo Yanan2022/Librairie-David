@@ -47,7 +47,7 @@ class CommandeController extends Controller
         if($panier->articles->isNotEmpty()) {
             return view("commandes.create", compact('panier'));
         } else {
-            return redirect("/catal");
+            return redirect("/");
         }
     }
 

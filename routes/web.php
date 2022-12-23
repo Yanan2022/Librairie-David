@@ -21,6 +21,8 @@ use App\Http\Controllers\PanierController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\dashbordController;
+use App\Http\Controllers\kitController;
+use App\Http\Controllers\PanierkitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +90,7 @@ Route::get('/tle', [HomeController::class, 'tle'])->name('tle');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 Route::resource('articles', articles::class);
+Route::resource('kits', kitController::class);
 Route::resource('categories', catEntrepriseController::class);
 Route::resource('entreprises', entrepriseController::class);
 Route::resource('catArts', typearticleController::class);
@@ -102,9 +105,12 @@ Route::post("/commandes/{commande}/validate", [CommandeController::class, 'valid
 Route::match(['get', 'post'], "/commandes/{commande}/delivery-mode", [CommandeController::class, 'choisirLivreur'])->name("commandes.choose-delivery-mode");
 
 Route::get('article/{article}/ajouter-au-panier', [PanierController::class, 'ajouterArticle'])->name("panier.ajouter-article");
+Route::get('kit/{kit}/ajout-au-panier', [PanierkitController::class, 'ajouterKit'])->name("panier.ajouter-kit");
 Route::get('article/{article}/retirer-du-panier', [PanierController::class, 'retirerArticle'])->name("panier.retirer-article");
 Route::get('panier', [PanierController::class, 'index'])->name("panier.index");
 Route::get('panier/vider', [PanierController::class, 'vider'])->name("panier.vider");
+Route::get('kitcommande/{id}', [PanierkitController::class, 'create'])->name("kitcommande");
+Route::post('kitStore', [PanierkitController::class, 'store'])->name("kitStore");
 
 
 

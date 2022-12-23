@@ -19,6 +19,11 @@ class Panier extends Model
         return $this->belongsToMany(Tb_articles::class, 'paniers_articles', 'panier_id', 'article_id')->withPivot('quantite', 'prix_unitaire');
     }
 
+    public function kits()
+    {
+        return $this->belongsToMany(Tb_kit::class, 'paniers_articles', 'panier_id', 'article_id')->withPivot('quantite', 'prix_unitaire');
+    }
+
     public function getTotalAttribute()
     {
         $t = 0;
@@ -40,6 +45,23 @@ class Panier extends Model
             $article = $this->articles->where('id', $article->id)->first();
             $this->articles()->updateExistingPivot($article->id, [
                 'quantite' => $article->pivot->quantite + $quantite
+            ]);
+        }
+
+        return $this;
+    }
+
+    public function addKit(Tb_kit $kit, $quantite = 1)
+    {
+        if(!$this->kits->contains('id', $kit->id)) {
+            $this->kits()->attach($kit->id, [
+                'quantite' => $quantite,
+                'prix_unitaire' => (int) $kit->PrixKit,
+            ]);
+        } else {
+            $kit = $this->kits->where('id', $kit->id)->first();
+            $this->kits()->updateExistingPivot($kit->id, [
+                'quantite' => $kit->pivot->quantite + $quantite
             ]);
         }
 

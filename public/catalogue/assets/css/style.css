@@ -7121,7 +7121,7 @@ background-color: #888888;
 	left: -63px;
 	bottom: 0;
 }
-.wrap-product-detail .detail-info .quantity-input .btn-increase {
+.wrap-product-detail .detail-info .quantity-input .fa-plus {
 	margin-left: 10px;
 	margin-right: 1px;
 }
@@ -7158,5 +7158,7 @@ background-color: #888888;
 	margin-bottom: 65px;
 	padding-left: 40px;
 }
+
+
 
 

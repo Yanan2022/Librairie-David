@@ -43,8 +43,8 @@ class HomeController extends Controller
             "image"=>"required|mimes:png,jpg,jpeg|max:10000"
         ]);
 
-        $classe = $request->get('classe');
-        $classe =  Tb_articles::where('classe','=', $classe);
+        //$classe = $request->get('classe');
+        //$classe =  Tb_articles::where('classe','=', $classe);
         // $classe = Tb_articles::query();
         // if ($classe) {
             # code...
@@ -60,24 +60,57 @@ class HomeController extends Controller
             $pieces = array();
             $pieces = preg_split("/[\\r\\t\\n]+/i", $text);
 
-            $resultat = collect();
-            foreach($pieces as $piece){
-                $query = $classe;
-                $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
-                $piece = str_replace($reservedSymbols, '', $piece);
-                $piece = implode('+',explode(' ',$piece));
-                $resultat = $resultat->merge($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
-                        ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
-                        ->orderByDesc('relevance_score')->get());
-            }
+            //fonction de recherche pour la reconnaissance avec le ocr
 
-            $resultat = $resultat->unique('id');
+            // $resultat = collect();
+            // foreach($pieces as $piece){
+            //     $query = $classe;
+            //     $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
+            //     $piece = str_replace($reservedSymbols, '', $piece);
+            //     $piece = implode('+',explode(' ',$piece));
+            //     $resultat = $resultat->merge($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
+            //             ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
+            //             ->orderByDesc('relevance_score')->get());
+            // }
 
-            return response()->json($resultat); //->sum('PrixArticle')
+            // $resultat = $resultat->unique('id');
+
+        //  $articles = $resultat;//response()->json($resultat); //->sum('PrixArticle')
+        //  $cotation = $resultat->sum('PrixArticle');//response()->json($resultat); //->sum('PrixArticle')
+
         // }
         // DB::table('songs')->select('*')->selectRaw("MATCH (title) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$s])
         // ->whereRaw("MATCH (title) AGAINST (? IN BOOLEAN MODE)", $s)
         // ->orderByDesc('relevance_score')->paginate(30);
+
+        //pour les tests
+        //$categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        //$entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+        // $articles = Tb_articles::with(['type', 'entreprise'])
+        //                          ->paginate(3);
+
+        $table = 'tb_kits';//request()->get('nomTable');
+        $table = $table;
+        $text = request()->get('classe');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+
+
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+        return view('front.catalogue.scanner', compact('articles', 'pieces'));
     }
 
     public function get_search_dynamique($query)
