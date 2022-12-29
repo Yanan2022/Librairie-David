@@ -114,7 +114,7 @@
                                         </span>
                                     </a>
                                     <div class="wrap-price">
-                                        <span class="product-price">{{ $article->PrixArticle }} FCFA</span>
+                                        <span class="product-price">{{ $item->PrixArticle }} FCFA</span>
                                     </div>
                                 </div>
                             </div>

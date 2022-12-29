@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateCommandeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
+use Session;
 
 class CommandeController extends Controller
 {
@@ -42,12 +43,16 @@ class CommandeController extends Controller
      */
     public function create(Request $request)
     {
-        $panier = $this->_getPanier($request);
-
-        if($panier->articles->isNotEmpty()) {
-            return view("commandes.create", compact('panier'));
-        } else {
-            return redirect("/");
+        if (empty(Session::get('client')['nom'])) {
+            # code...
+            return redirect('login-client');
+        }else{
+            $panier = $this->_getPanier($request);
+            if($panier->articles->isNotEmpty()) {
+                return view("commandes.create", compact('panier'));
+            } else {
+                return redirect("/");
+            }
         }
     }
 

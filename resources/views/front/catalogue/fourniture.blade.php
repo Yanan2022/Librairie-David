@@ -20,7 +20,17 @@
                 <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12 main-content-area">
                     <div class="wrap-shop-control">
 
-                        <h1 class="shop-title">Ouvrage {{$articles["0"]->classe}}</h1>
+                        <h1 class="shop-title">
+                            @if ( $id == 1)
+                                La liste des romans
+                            @elseif ($id == 2)
+                                La liste des cahiers
+                            @elseif ($id == 3)
+                                La liste des matériels
+                            @else
+                                Autres catégories
+                            @endif
+                        </h1>
 
                         <div class="wrap-right">
                             <div class="change-display-mode">

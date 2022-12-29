@@ -21,15 +21,9 @@ class typearticleController extends Controller
     {
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-         $articles = Tb_articles::where('IdTypeArticle', '=', $id)
+        $articles = Tb_articles::where('IdTypeArticle', '=', $id)
                                  ->paginate(6);
-        //return $articles;
-        return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
-        // return view('front.catalogue.show', [
-        //     'categories' => typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get(),
-        //     'entreprises' => EntrepriseModel::orderBy('LibelleEntreprise')->get(),
-        //     'articles' => Tb_articles::with(['type', 'entreprise'])->get(),
-        // ]);
+        return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises','id'));
     }
 
 

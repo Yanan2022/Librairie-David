@@ -27,7 +27,9 @@
                 <tbody>
                     @foreach ($articles as $item)
                         <tr>
-                            <td>{{ $item->CodeArticle }}</td>
+                            <td>
+                                {{ $item->CodeArticle }}
+                            </td>
                             <td>{{ $item->LibelleArticle }}</td>
                             <td>{{ $item->PrixArticle }}</td>
                             <td><img src='images/{{ $item->ImageArticle }}' style="height:30px;widght:30px;"></td>
@@ -58,7 +60,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
-                    <h6 class="modal-title"><i class="la la-folder-open"></i> Ajout d'un article</h6>
+                    <h6 class="modal-title"><i class="la la-folder-open"></i> Ajouter un nouveau article</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
