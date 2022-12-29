@@ -26,30 +26,23 @@
                     <div class="wrap-address-billing">
                         <h3 class="box-title">Adresse de Facturation</h3>
                         @csrf
-                        <p class="row-in-form">
-                            <label for="fname">Prénom(s)<span>*</span></label>
-                            <input id="fname" type="text" name="prenoms" value="{{ old('prenoms') }}" required />
-                        </p>
-                        <p class="row-in-form">
-                            <label for="lname">Nom<span>*</span></label>
-                            <input id="lname" type="text" name="nom" value="{{ old('nom') }}" required />
-                        </p>
-                        <p class="row-in-form">
-                            <label for="email">E-mail:</label>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}">
-                        </p>
+                        <input id="prenom" type="text" name="prenoms" value="{{ Session::get('client')->prenom }}" required class="hidden" />
+                        <input id="nom" type="text" name="nom" value="{{ Session::get('client')->nom }}" required class="hidden" />
+                        <input id="user_id" type="text" name="user_id" value="{{ Session::get('client')->id }}" required class="hidden" />
+
                         <p class="row-in-form">
                             <label for="phone">Numéro de téléphone<span>*</span></label>
                             <input id="phone" type="text" name="telephone" value="{{ old('telephone') }}"
                                 placeholder="00 00 00 00 00/00 00 00 00 00" required>
                         </p>
-                        {{--<p class="row-in-form">
-                            <label for="add">Adresse<span>*</span></label>
-                            <input id="add" type="text" name="adresse" value="{{ old('adresse') }}" required />
-                        </p> --}}
+
                         <p class="row-in-form">
                             <label for="city">Ville<span>*</span></label>
                             <input id="city" type="text" name="ville" value="{{ old('ville') }}" required>
+                        </p>
+                        <p class="row-in-form">
+                            <label for="email">E-mail:</label>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}">
                         </p>
                         <p class="row-in-form">
                             <label for="city2">Commune</label>

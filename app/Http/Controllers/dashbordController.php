@@ -11,6 +11,7 @@ use App\Models\Tb_articles;
 use App\Models\typearticleModel;
 use App\Models\EntrepriseModel;
 use App\Models\Commande;
+use APP\Models\LivraisonModel;
 
 
 class dashbordController extends Controller
@@ -35,7 +36,8 @@ class dashbordController extends Controller
         $articles = Tb_articles::all();
         $categories = typearticleModel::all();
         $commandes = Commande::all();
-        return view('dashboard', compact('articles', 'categories', 'commandes'));
+        $liv = DB::table('livraison_models')->get();
+        return view('dashboard', compact('articles', 'categories', 'commandes','liv'));
     }
 
     public function upload(Request $request)

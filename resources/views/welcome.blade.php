@@ -279,6 +279,30 @@
 							</a>
 						</li>
 
+                        <li class="nav-item">
+							<a href="{{ route('classes.index') }}">
+								<i class="la la-folder-o"></i>
+								<p>Classes</p>
+
+							</a>
+						</li>
+
+                        <li class="nav-item">
+							<a href="{{ route('encarts.index') }}">
+								<i class="la la-folder-o"></i>
+								<p>Encart publicitaire</p>
+
+							</a>
+						</li>
+
+                        <li class="nav-item">
+							<a href="{{ route('bannieres.index') }}">
+								<i class="la la-folder-o"></i>
+								<p>Bannière</p>
+
+							</a>
+						</li>
+
 						<li class="nav-item">
 							<a href="/pays">
 								<i class="la la-flag-o"></i>

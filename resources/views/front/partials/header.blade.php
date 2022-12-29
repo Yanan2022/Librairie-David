@@ -2,7 +2,10 @@
     <div class="container-fluid">
         <div class="row">
             <div class="topbar-menu-area">
-                    <img src="{{asset('catalogue/banniere/banniere.png')}}" alt="mercado">
+                @foreach (App\Models\Encart::all() as $item)
+                    <img src='/images/{{ $item->image }}' alt="{{ $item->libelle }}">
+                @endforeach
+                    {{--<img src="{{asset('catalogue/banniere/banniere.png')}}" alt="mercado"> --}}
             </div>
 
             <div class="container">
@@ -16,7 +19,7 @@
                     <div class="wrap-search center-section">
                         <div class="wrap-search-form">
                             <form action="{{ route('search') }}" id="form-search-top" name="form-search-top">
-                                <input type="text" name="search" value="" placeholder="Rechercher">
+                                <input type="text" id="autocomplete" name="search" value="" placeholder="Rechercher">
                                 <button form="form-search-top" type="button"><i class="fa fa-search"
                                         aria-hidden="true"></i>
                                 </button>
@@ -34,10 +37,10 @@
                             </a>
                         </div>
                         <div class="wrap-icon-section minicart">
-                            <a href="#" class="link-direction">
+                            <a href="{{ route('listeCommande') }}" class="link-direction">
                                 <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                                 <div class="left-info">
-                                    <span class="index">{{Session::has('panier')}}</span>
+                                    <span class="index">{{Session::get('panier')}}</span>
                                     <span class="title">Panier</span>
                                 </div>
                             </a>
@@ -61,20 +64,30 @@
                                     <i class="fa fa-home" aria-hidden="true"></i></a>
                             </li>
                             <li class="menu-item">
-                                <a href="#" class="link-term mercado-item-title">Découvrez nos cartes</a>
-                            </li>
-                            <li class="menu-item">
                                 <a href="{{ route('speciale') }}" class="link-term mercado-item-title">Commmande spéciale</a>
                             </li>
-                            <li class="menu-item">
-                                <a href="#" class="link-term mercado-item-title">Réclamations et Suggestions</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="link-term mercado-item-title">Boutiques</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="{{ route('login') }}" class="link-term mercado-item-title">Compte</a>
-                            </li>
+
+                            @if (Session::has('client'))
+                                <li class="menu-item">
+                                    <a href="{{ route('listeCommande') }}" class="link-term mercado-item-title">Suivi commande</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{route('logout-client')}}" class="link-term mercado-item-title">
+                                        {{ Session::get('client')->nom.' '.Session::get('client')->prenom }}
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{route('logout-client')}}" class="link-term mercado-item-title">Deconnexion</a>
+                                </li>
+                            @else
+                                <li class="menu-item">
+                                    <a href="{{route('signup')}}" class="link-term mercado-item-title">créer compte</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{route('login-client')}}" class="link-term mercado-item-title">Connexion</a>
+                                </li>
+                            @endif
+
                         </ul>
                     </div>
                 </div>

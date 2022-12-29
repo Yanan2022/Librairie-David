@@ -23,6 +23,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\dashbordController;
 use App\Http\Controllers\kitController;
 use App\Http\Controllers\PanierkitController;
+use App\Http\Controllers\classeController;
+use App\Http\Controllers\encartController;
+use App\Http\Controllers\banniereController;
+use App\Http\Controllers\SuivicommandeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,10 +72,18 @@ Route::get('/listeEntr/{id}', [listeEntrepController::class, 'show']);
 Route::get('/', [catalogueController::class, 'index'])->name('accueil');
 Route::get('/fourniture', [catalogueController::class, 'fourniture'])->name('fourniture');
 Route::get('/accueil', [HomeController::class, 'index']);
+Route::get('/signup', [HomeController::class, 'signup'])->name('signup');
+Route::get('/logout-client', [HomeController::class, 'logoutClient'])->name('logout-client');
+Route::post('/acceder_compte', [HomeController::class, 'acceder_compte'])->name('acceder_compte');
+Route::get('/login-client', [HomeController::class, 'login'])->name('login-client');
+Route::post('/creerCompte', [HomeController::class, 'creerCompte'])->name('creerCompte');
 Route::get('/speciale', [HomeController::class, 'commandeSpeciale'])->name('speciale');
 Route::post('/searchSpeciale', [HomeController::class, 'searchSpeciale'])->name('searchSpeciale');
-
+Route::post('/get-results', [HomeController::class, 'typeaheadSearch'])->name('get-results');
+//Route::get('/get-results', 'HomeController@typeaheadSearch')->name('get-results');
 Route::post('/upload', [HomeController::class, 'upload'])->name('upload');
+Route::get('/listeCommande', [SuivicommandeController::class, 'listeCommande'])->name('listeCommande');
+Route::get('/detailCommande/{commande}', [SuivicommandeController::class, 'detailCommande'])->name('detailCommande');
 
 Route::get('/cp1', [HomeController::class, 'cp1'])->name('cp1');
 Route::get('/cp2', [HomeController::class, 'cp2'])->name('cp2');
@@ -90,6 +102,9 @@ Route::get('/tle', [HomeController::class, 'tle'])->name('tle');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 Route::resource('articles', articles::class);
+Route::resource('bannieres', banniereController::class);
+Route::resource('encarts', encartController::class);
+Route::resource('classes', classeController::class);
 Route::resource('kits', kitController::class);
 Route::resource('categories', catEntrepriseController::class);
 Route::resource('entreprises', entrepriseController::class);
@@ -117,3 +132,4 @@ Route::post('kitStore', [PanierkitController::class, 'store'])->name("kitStore")
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

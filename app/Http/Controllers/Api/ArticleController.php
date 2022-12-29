@@ -35,4 +35,40 @@ class ArticleController extends Controller
         $article->IdEntreprise = $article->entreprise_id;
         return response()->json($article->load(["type", "entreprise"]));
     }
+
+    public function test(Request $request)
+    {
+        return "je suis la";
+        // $request->validate([
+        //     "image"=>"required|mimes:png,jpg,jpeg|max:10000"
+        // ]);
+
+
+        //     if ($image = $request->get('image')) {
+        //         $destinationPath = 'images/';
+        //         $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+        //         return $fileNameTostore = $image->move($destinationPath, $profileImage);
+        //         $input['ImageArticle'] = "$profileImage";
+        //     }
+        //     $tesseractOcr = new TesseractOCR($fileNameTostore);
+        //     $text = $tesseractOcr->run();
+        //     $pieces = array();
+        //     $pieces = preg_split("/[\\r\\t\\n]+/i", $text);
+
+
+        //     $resultat = collect();
+        //     foreach($pieces as $piece){
+        //         $query = $classe;
+        //         $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
+        //         $piece = str_replace($reservedSymbols, '', $piece);
+        //         $piece = implode('+',explode(' ',$piece));
+        //         $resultat = $resultat->merge($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
+        //                 ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
+        //                 ->orderByDesc('relevance_score')->get());
+        //     }
+
+        //     $resultat = $resultat->unique('id');
+
+         //return $articles = response()->json($resultat);
+    }
 }

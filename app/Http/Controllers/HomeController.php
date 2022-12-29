@@ -7,10 +7,12 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use thiagoalessio\TesseractOCR\TesseractOCR;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Tb_articles;
 use App\Models\typearticleModel;
 use App\Models\EntrepriseModel;
-
+use App\Models\Client;
+use Session;
 
 class HomeController extends Controller
 {
@@ -35,26 +37,91 @@ class HomeController extends Controller
         //return view('home');
     }
 
+    public function signup()
+    {
+        # code...
+        return view('front.compte.signup');
+    }
+
+    public function login()
+    {
+        # code...
+        return view('front.compte.login');
+    }
+
+    public function creerCompte(Request $request){
+        $this->validate($request, [
+            'nom'=>'required',
+            'prenom'=>'required',
+            'email'=>'email|required|unique:clients',
+            'password'=>'required|min:4'
+        ]);
+        $client = new Client();
+        $client->nom = $request->input('nom');
+        $client->prenom = $request->input('prenom');
+        $client->email = $request->input('email');
+        $client->password = bcrypt($request->input('password'));
+        $client->save();
+        return redirect()->route('login-client')->with('status', 'votre compte a été créé avec succès');
+    }
+
+    public function acceder_compte(Request $request)
+    {
+        # code...
+        $this->validate($request, [
+            'email'=>'email|required',
+            'password'=>'required|min:4'
+        ]);
+
+        $client = Client::where('email', $request->input('email'))->first();
+        if ($client) {
+            # code...
+            if (Hash::check($request->input('password'), $client->password)) {
+                # code...
+                Session::put('client', $client);
+                return redirect('/');
+            }else {
+                # code...
+                return back()->with('status', 'Mauvais mot de passe ou email');
+            }
+        }else {
+            # code...
+            return back()->with('status', 'Vous n'."'".'avez pas de comptes');
+        }
+
+    }
+
+    public function logoutClient()
+    {
+        # code...
+        Session::forget('client');
+        return back();
+    }
+
+    public function typeaheadSearch(Request $request)
+    {
+          $dbQuery = $request->get('query');
+          $output = Tb_articles::where('LibelleArticle', 'LIKE', '%'. $dbQuery. '%')->get();
+          return response()->json($output->map( function($e){
+              return ['id'=>$e->id, 'name'=>$e->LibelleArticle];
+          }));
+    }
+
     public function upload(Request $request)
     {
         //return $test  = Tb_articles::where('LibelleArticle','like', "%mathématiques%")->get();
-        // echo (new TesseractOCR('catalogue/assets/images/size-banner-widget.jpg'))->run();
         $request->validate([
             "image"=>"required|mimes:png,jpg,jpeg|max:10000"
         ]);
-
         //$classe = $request->get('classe');
         //$classe =  Tb_articles::where('classe','=', $classe);
         // $classe = Tb_articles::query();
-        // if ($classe) {
-            # code...
             if ($image = $request->file('image')) {
                 $destinationPath = 'images/';
                 $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
                 $fileNameTostore = $image->move($destinationPath, $profileImage);
                 $input['ImageArticle'] = "$profileImage";
             }
-            //$tesseractOcr = new TesseractOCR('catalogue/assets/images/liste_fourniture.jpeg');
             $tesseractOcr = new TesseractOCR($fileNameTostore);
             $text = $tesseractOcr->run();
             $pieces = array();
@@ -83,11 +150,6 @@ class HomeController extends Controller
         // ->whereRaw("MATCH (title) AGAINST (? IN BOOLEAN MODE)", $s)
         // ->orderByDesc('relevance_score')->paginate(30);
 
-        //pour les tests
-        //$categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
-        //$entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::with(['type', 'entreprise'])
-        //                          ->paginate(3);
 
         $table = 'tb_kits';//request()->get('nomTable');
         $table = $table;
@@ -112,6 +174,15 @@ class HomeController extends Controller
         $articles =  $this->get_search_dynamique($requete);
         return view('front.catalogue.scanner', compact('articles', 'pieces'));
     }
+
+    public function ocr(Request $request)
+    {
+        return "ok";
+
+
+    }
+
+
 
     public function get_search_dynamique($query)
     {
@@ -176,19 +247,6 @@ class HomeController extends Controller
 
         return $search =  $this->get_search_dynamique($requete);
 
-        //  $result = new clsResultFunction();
-        //   $result->objet = $search;
-        //   if(count($search)<=0)
-        //   {
-        //     $result->bSuccess=false;
-        //     $result->message = "echec";
-        //   }
-        //   else
-        //   {
-        //     $result->bSuccess=true;
-        //     $result->message = "succes";
-        //   }
-
           return response()->json($search);
 
 
@@ -200,7 +258,7 @@ class HomeController extends Controller
         $table = 'tb_articles';//request()->get('nomTable');
         $table = $table;
         $text = 'cp1';//request()->get('text');
-         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
 
 
@@ -218,14 +276,10 @@ class HomeController extends Controller
         $requete = substr($requete,0,strlen($requete)-7);
 
         $articles =  $this->get_search_dynamique($requete);
-
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
-        //                          ->paginate(6);
-         //return response()->json($search);
-
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+        $classe = $articles["0"]->classe;
+         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises', 'classe'));
     }
 
     public function search()
@@ -341,13 +395,11 @@ class HomeController extends Controller
         $requete = substr($requete,0,strlen($requete)-7);
 
         $articles =  $this->get_search_dynamique($requete);
-
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
         // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
         //                          ->paginate(6);
          //return response()->json($search);
-
          return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
     }
 

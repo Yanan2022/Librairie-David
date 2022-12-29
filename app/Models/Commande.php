@@ -23,6 +23,7 @@ class Commande extends Model
         "coordonnees",
         "etat",
         "type_vehicule_id",
+        "user_id",
     ];
 
     protected $casts = [

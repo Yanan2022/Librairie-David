@@ -23,10 +23,17 @@ class PanierkitController extends Controller
 
     public function ajouterKit(Request $request, $idKit)
     {
-        $panier = Tb_articles::where('idKit','=', $idKit)->get();
-        $prixTotal = $panier->sum('PrixArticle');
-        return view("front.kit.panier", compact('panier','prixTotal', 'idKit'));
+        $articles = Tb_articles::where('idKit','=', $idKit)->get();
+        // $prixTotal = $panier->sum('PrixArticle');
+        // return view("front.kit.panier", compact('panier','prixTotal', 'idKit'));
 
+
+        foreach($articles as $article){
+             $panier = $this->_getPanier($request);
+             $panier->addArticle($article, 1)->refresh();
+        }
+
+        return redirect()->route("panier.index");
 
         // $panier = $this->_getPanier($request);
         // return $panier->addKit($kit, 1)->refresh();

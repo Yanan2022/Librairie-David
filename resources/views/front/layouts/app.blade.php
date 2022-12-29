@@ -51,6 +51,24 @@
     <script src="assets/js/jquery.sticky.js"></script>
     <script src="assets/js/functions.js"></script>
     @yield('scripts')
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js">
+     var route = "{{ url('get-results') }}";
+        $('#autocomplete').typeahead({
+            source: function (query, process) {
+                return $.get(route, {
+                    query: query,
+                    classNames: {
+                        input: 'Typeahead-input',
+                        hint: 'Typeahead-hint',
+                        selectable: 'Typeahead-selectable'
+                    }
+                }, function (d) {
+                    console.log(d)
+                    return process(d);
+                });
+            }
+        });
 </body>
 
 </html>

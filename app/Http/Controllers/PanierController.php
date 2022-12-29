@@ -15,18 +15,17 @@ class PanierController extends Controller
     public function index(Request $request)
     {
         $panier = $this->_getPanier($request);
-
-        return view("front.panier.panier", compact('panier'));
+        $produits =Tb_articles::whereIn('id',[3,4,5,6,7])->get();
+        return view("front.panier.panier", compact('panier','produits'));
     }
 
 
     public function ajouterArticle(Request $request, Tb_articles $article)
     {
-
         $panier = $this->_getPanier($request);
 
         $panier->addArticle($article, 1)->refresh();
-
+        //return $test->article;
         Session::put('panier', $panier);
 
         return redirect()->route("panier.index");

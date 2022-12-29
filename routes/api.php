@@ -45,4 +45,5 @@ Route::get('articles/{article}', [ArticleController::class, 'show']);
 
 //api
 Route::post('/upload', [HomeController::class, 'upload']);
+Route::get('/test', [ArticleController::class, 'test']);
 Route::get('/search', [HomeController::class, 'query_get_search_dynamique']);

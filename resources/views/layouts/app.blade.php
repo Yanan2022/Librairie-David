@@ -1,559 +1,83 @@
-<!DOCTYPE html>
-<html lang="fr">
-
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    @section("base")
-        <base href="{{ url('/catalogue') }}/">
-    @show
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        @section("title") Accueil @show
-    </title>
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link
-        href="https://fonts.googleapis.com/css?family=Lato:300,400,400italic,700,700italic,900,900italic&amp;subset=latin,latin-ext"
-        rel="stylesheet">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open%20Sans:300,400,400italic,600,600italic,700,700italic&amp;subset=latin,latin-ext"
-        rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="assets/css/animate.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/chosen.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/color-01.css">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    {{ config('app.name', 'Laravel') }}
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-<body class="home-page home-01 ">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
 
-    <!-- mobile menu -->
-    <div class="mercado-clone-wrap">
-        <div class="mercado-panels-actions-wrap">
-            <a class="mercado-close-btn mercado-close-panels" href="#">x</a>
-        </div>
-        <div class="mercado-panels"></div>
-    </div>
+                    </ul>
 
-    <!--header-->
-    <header id="header" class="header header-style-1">
-        <div class="container-fluid">
-            <div class="row">
-
-                <div class="topbar-menu-area">
-                    {{--<div class="container">
-                        <div class="topbar-menu left-menu">
-                            <ul>
-                                <li class="menu-item">
-
-                                        <span
-                                            class="icon label-before fa fa-mobile">
-                                        </span>Hotline:  (+225) 07 57 95 25 55
-
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Authentication Links -->
+                        @guest
+                            @if (Route::has('login'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
-                            </ul>
-                        </div>
-                        <div class="topbar-menu right-menu">
-                            <ul>
-                                <li class="menu-item"><a title="Register or Login" href="{{ route('login') }}">Connexion</a></li>
-                                <li class="menu-item">
-                                    <a title="Register or Login" href="{{ route('register') }}">
-                                        S'enregistrer
+                            @endif
+
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                </li>
+                            @endif
+                        @else
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
                                     </a>
-                                </li>
-                                <li class="menu-item lang-menu menu-item-has-children parent">
-                                    <a title="English" href="#"><span class="img label-before"><img
-                                                src="assets/images/lang-en.png" alt="lang-en"></span>English<i
-                                            class="fa fa-angle-down" aria-hidden="true"></i></a>
-                                    <ul class="submenu lang">
-                                        <li class="menu-item"><a title="hungary" href="#"><span
-                                                    class="img label-before"><img src="assets/images/lang-hun.png"
-                                                        alt="lang-hun"></span>Hungary</a></li>
-                                        <li class="menu-item"><a title="german" href="#"><span
-                                                    class="img label-before"><img src="assets/images/lang-ger.png"
-                                                        alt="lang-ger"></span>German</a></li>
-                                        <li class="menu-item"><a title="french" href="#"><span
-                                                    class="img label-before"><img src="assets/images/lang-fra.png"
-                                                        alt="lang-fre"></span>French</a></li>
-                                        <li class="menu-item"><a title="canada" href="#"><span
-                                                    class="img label-before"><img src="assets/images/lang-can.png"
-                                                        alt="lang-can"></span>Canada</a></li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item menu-item-has-children parent">
-                                    <a title="Dollar (USD)" href="#">Dollar (USD)<i class="fa fa-angle-down"
-                                            aria-hidden="true"></i></a>
-                                    <ul class="submenu curency">
-                                        <li class="menu-item">
-                                            <a title="Pound (GBP)" href="#">Pound (GBP)</a>
-                                        </li>
-                                        <li class="menu-item">
-                                            <a title="Euro (EUR)" href="#">Euro (EUR)</a>
-                                        </li>
-                                        <li class="menu-item">
-                                            <a title="Dollar (USD)" href="#">Dollar (USD)</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>--}}
-                </div>
 
-                <div class="container">
-                    <div class="mid-section main-info-area">
-
-                        <div class="wrap-logo-top left-section">
-                            <a href="index.html" class="link-to-home">
-                                <img src="{{asset('logo.png')}}" alt="mercado">
-                            </a>
-                        </div>
-
-                        <div class="wrap-search center-section">
-                            <div class="wrap-search-form">
-                                <form action="#" id="form-search-top" name="form-search-top">
-                                    <input type="text" name="search" value="" placeholder="Rechercher">
-                                    <button form="form-search-top" type="button"><i class="fa fa-search"
-                                            aria-hidden="true"></i></button>
-                                    {{-- <div class="wrap-list-cate">
-                                        <input type="hidden" name="product-cate" value="0" id="product-cate">
-                                        <a href="#" class="link-control">Categories</a>
-                                        <ul class="list-cate">
-                                            <li class="level-0">All Category</li>
-                                            <li class="level-1">-Electronics</li>
-                                            <li class="level-2">Batteries & Chargens</li>
-                                            <li class="level-2">Headphone & Headsets</li>
-                                            <li class="level-2">Mp3 Player & Acessories</li>
-                                            <li class="level-1">-Smartphone & Table</li>
-                                            <li class="level-2">Batteries & Chargens</li>
-                                            <li class="level-2">Mp3 Player & Headphones</li>
-                                            <li class="level-2">Table & Accessories</li>
-                                            <li class="level-1">-Electronics</li>
-                                            <li class="level-2">Batteries & Chargens</li>
-                                            <li class="level-2">Headphone & Headsets</li>
-                                            <li class="level-2">Mp3 Player & Acessories</li>
-                                            <li class="level-1">-Smartphone & Table</li>
-                                            <li class="level-2">Batteries & Chargens</li>
-                                            <li class="level-2">Mp3 Player & Headphones</li>
-                                            <li class="level-2">Table & Accessories</li>
-                                        </ul>
-                                    </div> --}}
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="wrap-icon right-section">
-                            <div class="wrap-icon-section wishlist">
-                                <a href="#" class="link-direction">
-                                    <i class="fa fa-heart" aria-hidden="true"></i>
-                                    <div class="left-info">
-                                        <span class="index">0 item</span>
-                                        <span class="title">Wishlist</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="wrap-icon-section minicart">
-                                <a href="#" class="link-direction">
-                                    <i class="fa fa-shopping-basket" aria-hidden="true"></i>
-                                    <div class="left-info">
-                                        <span class="index">0</span>
-                                        <span class="title">Panier</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="wrap-icon-section show-up-after-1024">
-                                <a href="#" class="mobile-navigation">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="nav-section header-sticky">
-                    {{--<div class="header-nav-section">
-                        <div class="container">
-                            <ul class="nav menu-nav clone-main-menu" id="mercado_haead_menu" data-menuname="Sale Info">
-                                <li class="menu-item"><a href="#" class="link-term">Weekly Featured</a><span
-                                        class="nav-label hot-label">hot</span></li>
-                                <li class="menu-item"><a href="#" class="link-term">Hot Sale items</a><span
-                                        class="nav-label hot-label">hot</span></li>
-                                <li class="menu-item"><a href="#" class="link-term">Top new items</a><span
-                                        class="nav-label hot-label">hot</span></li>
-                                <li class="menu-item"><a href="#" class="link-term">Top Selling</a><span
-                                        class="nav-label hot-label">hot</span></li>
-                                <li class="menu-item"><a href="#" class="link-term">Top rated items</a><span
-                                        class="nav-label hot-label">hot</span></li>
-                            </ul>
-                        </div>
-                    </div> --}}
-
-                    <div class="primary-nav-section">
-                        <div class="container">
-                            <ul class="nav primary clone-main-menu" id="mercado_main" data-menuname="Main menu">
-                                <li class="menu-item home-icon">
-                                    <a href="index.html" class="link-term mercado-item-title"><i class="fa fa-home"
-                                            aria-hidden="true"></i></a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="about-us.html" class="link-term mercado-item-title">Découvrez nos cartes</a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="shop.html" class="link-term mercado-item-title">Commmande spéciale</a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="cart.html" class="link-term mercado-item-title">Réclamations et Suggestions</a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="contact-us.html" class="link-term mercado-item-title">Boutiques</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    @yield("content")
-
-    <!--footer area-->
-    <footer id="footer">
-        <div class="wrap-footer-content footer-style-1">
-
-            <div class="wrap-function-info">
-                <div class="container">
-                    <ul>
-
-                        <li class="fc-info-item">
-                            <i class="fa fa-recycle" aria-hidden="true"></i>
-                            <div class="wrap-left-info">
-                                <h4 class="fc-name">Newletter</h4>
-                                <p class="fc-desc">Rejoignez notre newsletter maintenant</p>
-                            </div>
-
-                        </li>
-                        <li class="fc-info-item">
-                            <div class="wrap-left-info">
-                                <div class="wrap-search center-section">
-                                    <div class="wrap-search-form">
-                                        <form action="#" id="form-search-top" name="form-search-top">
-                                            <input type="text" name="search" value="" placeholder="Rechercher">
-                                        </form>
-                                    </div>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
                                 </div>
-                            </div>
-
-                        </li>
-                        {{--<li class="fc-info-item">
-                            <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
-                            <div class="wrap-left-info">
-                                <h4 class="fc-name">Safe Payment</h4>
-                                <p class="fc-desc">Safe your online payment</p>
-                            </div>
-
-                        </li>
-                        <li class="fc-info-item">
-                            <i class="fa fa-life-ring" aria-hidden="true"></i>
-                            <div class="wrap-left-info">
-                                <h4 class="fc-name">Online Suport</h4>
-                                <p class="fc-desc">We Have Support 24/7</p>
-                            </div>
-
-                        </li> --}}
+                            </li>
+                        @endguest
                     </ul>
                 </div>
             </div>
-            <!--End function info-->
+        </nav>
 
-            <div class="main-footer-content">
-
-                <div class="container">
-
-                    <div class="row">
-
-                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
-                            <div class="wrap-footer-item">
-                                <h3 class="item-header">Contact</h3>
-                                <div class="item-content">
-                                    <div class="wrap-contact-detail">
-                                        <ul>
-                                            <li>
-                                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                                <p class="contact-txt">Riviera palmeraie bonoumin entre le rond point ADO et le restaurant la Shish</p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-phone" aria-hidden="true"></i>
-                                                <p class="contact-txt">(+225) 07 57 95 25 55 </p>
-                                            </li>
-                                            <li>
-                                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                                <p class="contact-txt"> info@librairiedavidcenter.ci</p>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
-
-                            {{--<div class="wrap-footer-item">
-                                <h3 class="item-header">Hot Line</h3>
-                                <div class="item-content">
-                                    <div class="wrap-hotline-footer">
-                                        <span class="desc">Call Us toll Free</span>
-                                        <b class="phone-number">(+123) 456 789 - (+123) 666 888</b>
-                                    </div>
-                                </div>
-                            </div> --}}
-
-                            <div class="wrap-footer-item footer-item-second">
-                                <h3 class="item-header">Newsletter</h3>
-                                <div class="item-content">
-                                    <div class="wrap-newletter-footer">
-                                        <form action="#" class="frm-newletter" id="frm-newletter">
-                                            <input type="email" class="input-email" name="email" value=""
-                                                placeholder="Enter your email address">
-                                            <button class="btn-submit">Subscribe</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12 box-twin-content ">
-                            <div class="row">
-                                <div class="wrap-footer-item twin-item">
-                                    <h3 class="item-header">Mon compte</h3>
-                                    <div class="item-content">
-                                        <div class="wrap-vertical-nav">
-                                            <ul>
-                                                <li class="menu-item">
-                                                    <a href="#" class="link-term">
-                                                      Information personnelle
-                                                    </a>
-                                                </li>
-                                                <li class="menu-item"><a href="#"
-                                                        class="link-term">Commandes</a></li>
-                                                <li class="menu-item">
-                                                    <a href="#" class="link-term">Avoirs
-                                                        Adresses</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="#" class="link-term">
-                                                        Bon de réductions
-                                                    </a>
-                                                </li>
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="wrap-footer-item twin-item">
-                                    <h3 class="item-header">Notre société</h3>
-                                    <div class="item-content">
-                                        <div class="wrap-vertical-nav">
-                                            <ul>
-                                                <li class="menu-item"><a href="#" class="link-term">Livraison
-                                                    </a>
-                                                </li>
-                                                <li class="menu-item"><a href="#" class="link-term">
-                                                    Mentions légales</a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="#" class="link-term">
-                                                     Conditions d'utilisation
-                                                    </a>
-                                                </li>
-                                                <li class="menu-item">
-                                                    <a href="#" class="link-term">Nos boutiques LD | Librairie David</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
-                            <div class="wrap-footer-item">
-                                <h3 class="item-header">Nous utilisons des paiements sécurisés:</h3>
-                                <div class="item-content">
-                                    <div class="wrap-list-item wrap-gallery">
-                                        <img src="assets/images/payment.png" style="max-width: 260px;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
-                            <div class="wrap-footer-item">
-                                <h3 class="item-header">Réseau social</h3>
-                                <div class="item-content">
-                                    <div class="wrap-list-item social-network">
-                                        <ul>
-                                            <li><a href="#" class="link-to-item" title="twitter"><i
-                                                        class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                            <li><a href="#" class="link-to-item" title="facebook"><i
-                                                        class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                            <li><a href="#" class="link-to-item" title="pinterest"><i
-                                                        class="fa fa-pinterest" aria-hidden="true"></i></a></li>
-                                            <li><a href="#" class="link-to-item" title="instagram"><i
-                                                        class="fa fa-instagram" aria-hidden="true"></i></a></li>
-                                            <li><a href="#" class="link-to-item" title="vimeo"><i
-                                                        class="fa fa-vimeo" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12">
-                            <div class="wrap-footer-item">
-                                <h3 class="item-header">Dowload App</h3>
-                                <div class="item-content">
-                                    <div class="wrap-list-item apps-list">
-                                        <ul>
-                                            <li><a href="#" class="link-to-item"
-                                                    title="our application on apple store">
-                                                    <figure><img src="assets/images/brands/apple-store.png"
-                                                            alt="apple store" width="128" height="36"></figure>
-                                                </a></li>
-                                            <li><a href="#" class="link-to-item"
-                                                    title="our application on google play store">
-                                                    <figure><img src="assets/images/brands/google-play-store.png"
-                                                            alt="google play store" width="128" height="36"></figure>
-                                                </a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
-
-                    </div>
-                </div>
-
-                {{-- <div class="wrap-back-link">
-                    <div class="container">
-                        <div class="back-link-box">
-                            <h3 class="backlink-title">Quick Links</h3>
-                            <div class="back-link-row">
-                                <ul class="list-back-link">
-                                    <li><span class="row-title">Mobiles:</span></li>
-                                    <li><a href="#" class="redirect-back-link" title="mobile">Mobiles</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="yphones">YPhones</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Gianee Mobiles GL">Gianee Mobiles
-                                            GL</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Karbonn">Mobiles
-                                            Karbonn</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Viva">Mobiles Viva</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Intex">Mobiles Intex</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Micrumex">Mobiles
-                                            Micrumex</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Bsus">Mobiles Bsus</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Samsyng">Mobiles
-                                            Samsyng</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Mobiles Lenova">Mobiles
-                                            Lenova</a></li>
-                                </ul>
-
-                                <ul class="list-back-link">
-                                    <li><span class="row-title">Tablets:</span></li>
-                                    <li><a href="#" class="redirect-back-link" title="Plesc YPads">Plesc YPads</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Samsyng Tablets">Samsyng
-                                            Tablets</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Qindows Tablets">Qindows
-                                            Tablets</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Calling Tablets">Calling
-                                            Tablets</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Micrumex Tablets">Micrumex
-                                            Tablets</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Lenova Tablets Bsus">Lenova
-                                            Tablets Bsus</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Tablets iBall">Tablets iBall</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Tablets Swipe">Tablets Swipe</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Tablets TVs, Audio">Tablets TVs,
-                                            Audio</a></li>
-                                </ul>
-
-                                <ul class="list-back-link">
-                                    <li><span class="row-title">Fashion:</span></li>
-                                    <li><a href="#" class="redirect-back-link" title="Sarees Silk">Sarees Silk</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="sarees Salwar">sarees Salwar</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Suits Lehengas">Suits
-                                            Lehengas</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Biba Jewellery">Biba
-                                            Jewellery</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Rings Earrings">Rings
-                                            Earrings</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Diamond Rings">Diamond Rings</a>
-                                    </li>
-                                    <li><a href="#" class="redirect-back-link" title="Loose Diamond Shoes">Loose
-                                            Diamond Shoes</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="BootsMen Watches">BootsMen
-                                            Watches</a></li>
-                                    <li><a href="#" class="redirect-back-link" title="Women Watches">Women Watches</a>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-
-            </div>
-
-            <div class="coppy-right-box">
-                <div class="container">
-                    <div class="coppy-right-item item-left">
-                        <p class="coppy-right-text">Copyright © 2022 David Librairie. Tous les droits sont réservés</p>
-                    </div>
-                    <div class="coppy-right-item item-right">
-                        {{-- <div class="wrap-nav horizontal-nav">
-                            <ul>
-                                <li class="menu-item"><a href="about-us.html" class="link-term">About us</a>
-                                </li>
-                                <li class="menu-item"><a href="privacy-policy.html"
-                                        class="link-term">Privacy Policy</a></li>
-                                <li class="menu-item"><a href="terms-conditions.html"
-                                        class="link-term">Terms & Conditions</a></li>
-                                <li class="menu-item"><a href="return-policy.html" class="link-term">Return
-                                        Policy</a></li>
-                            </ul>
-                        </div> --}}
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="assets/js/jquery-1.12.4.minb8ff.js?ver=1.12.4"></script>
-    <script src="assets/js/jquery-ui-1.12.4.minb8ff.js?ver=1.12.4"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/chosen.jquery.min.js"></script>
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/jquery.countdown.min.js"></script>
-    <script src="assets/js/jquery.sticky.js"></script>
-    <script src="assets/js/functions.js"></script>
-    @yield('scripts')
+        <main class="py-4">
+            @yield('content')
+        </main>
+    </div>
 </body>
-
 </html>

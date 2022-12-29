@@ -13,45 +13,24 @@
             <div class="wrap-breadcrumb">
                 <ul>
                     <li class="item-link"><a href="{{ url('/') }}" class="link">Accueil</a></li>
-                    <li class="item-link"><span>Librairie</span></li>
+                    <li class="item-link"><span>Ouvrage</span></li>
                 </ul>
             </div>
             <div class="row">
-
                 <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12 main-content-area">
                     <div class="wrap-shop-control">
 
-                        <h1 class="shop-title">Librairie</h1>
+                        <h1 class="shop-title">Ouvrage {{$articles["0"]->classe}}</h1>
 
                         <div class="wrap-right">
-
-                            <div class="sort-item orderby ">
-                                <select name="orderby" class="use-chosen">
-                                    <option value="menu_order" selected="selected">Ordre par défaut</option>
-                                    <option value="popularity">Trier par Popularité</option>
-                                    <option value="rating">Trier par Evaluations</option>
-                                    <option value="date">Trier par Nouveauté</option>
-                                    <option value="price">Trier par Prix : croissant</option>
-                                    <option value="price-desc">Trier par Prix : décroissant</option>
-                                </select>
-                            </div>
-
-                            <div class="sort-item product-per-page">
-                                <select name="post-per-page" class="use-chosen">
-                                    <option value="12" selected="selected">12 par page</option>
-                                    <option value="16">16 par page</option>
-                                    <option value="18">18 par page</option>
-                                    <option value="21">21 par page</option>
-                                    <option value="24">24 par page</option>
-                                    <option value="30">30 par page</option>
-                                    <option value="32">32 par page</option>
-                                </select>
-                            </div>
-
                             <div class="change-display-mode">
-                                <a href="#" class="grid-mode display-mode active"><i class="fa fa-th"></i>Grille</a>
-                                <a href="list.html" class="list-mode display-mode"><i class="fa fa-th-list"></i>Liste</a>
-                            </div>
+                                {{--<a href="{{ route('cp1')}}" class="grid-mode display-mode active">
+                                    <i class="fa fa-th"></i>Grille</a>
+                                <a href="list.html" class="list-mode display-mode">
+                                    <i class="fa fa-th-list"></i>
+                                    Liste
+                                </a> --}}
+                        </div>
 
                         </div>
 
@@ -169,7 +148,8 @@
                                         CP1
                                         <span>(217)</span></a>
                                     </li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('cp2')}}">CP2
+                                <li class="list-item"><a class="filter-link " href="{{ route('cp2')}}">
+                                    CP2
                                         <span>(179)</span></a></li>
                                 <li class="list-item"><a class="filter-link " href="{{ route('ce1')}}">CE1
                                         <span>(79)</span></a></li>

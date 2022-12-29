@@ -58,23 +58,60 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <button type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#rangmt"><h4>Rangement</h4></button>
-            <div id="rangmt" class="collapse card" >
-                {{--@if(count($casiers) > 0) --}}
-                    <div class="card-columns p-2">
-                       {{-- @foreach($casiers as $casier) --}}
-                            <div class="card bg-success">
-                                <a class="card-link text-white" href="{{--contenuCasier/{{$casier->id}} --}}#">
-                                    <div class="card-body text-center">
-                                        <h5 class="card-title"><b>Casier 1{{--$casier->nom--}}</b></h5>
-                                    </div>
-                                </a>
-                            </div>
-                        {{--@endforeach --}}
+            <button type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#rangmt">
+                <h4>La liste des commandes</h4>
+            </button>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="example" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nom client</th>
+                                        <th>Prenom client</th>
+                                        <th>Contact</th>
+                                        <th>Longitude départ</th>
+                                        <th>Latitude départ</th>
+                                        <th>Longitude destination</th>
+                                        <th>Latitude destination</th>
+                                        <th>Description</th>
+                                        <th>Montant Livraison</th>
+                                        <th>Bouton action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($liv as $item)
+                                        <tr>
+                                            <td>{{ $item->nomclient }}</td>
+                                            <td>{{ $item->prenomclient }}</td>
+                                            <td>{{ $item->contactclient }}</td>
+                                            <td>{{ $item->long }}</td>
+                                            <td>{{ $item->lat }}</td>
+                                            <td>{{ $item->long_Arrive }}</td>
+                                            <td>{{ $item->lat_Arrive }}</td>
+                                            <td>{{ $item->description_colis }}</td>
+                                            <td>{{ $item->coutLivraison }}</td>
+
+                                            <td>
+                                                <a href="{{ route('livs.edit', $item->id) }}" class="btn btn-warning"><i
+                                                        class="la la-edit"></i></a>
+                                                <a href="{{ route("livs.show", $item->id) }}" class="btn btn-info"><i
+                                                        class="la la-search-plus"></i></a>
+                                                <button class="btn btn-danger delete-row"
+                                                    data-uri="{{ route('livs.destroy', $item->id) }}"><i
+                                                        class="la la-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
-                {{--@else --}}
-                    <p>Aucun casier cree !!...</p>
-                {{--@endif --}}
+                </div>
             </div>
         </div>
     </div>
