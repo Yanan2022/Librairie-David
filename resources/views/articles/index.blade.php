@@ -21,6 +21,7 @@
                         <th>Aperçu</th>
                         <th>Statut</th>
                         <th>Type article</th>
+                        <th>Classe</th>
                         <th>Bouton action</th>
                     </tr>
                 </thead>
@@ -35,6 +36,7 @@
                             <td><img src='images/{{ $item->ImageArticle }}' style="height:30px;widght:30px;"></td>
                             <td>{{ $item->StatutArticle }}</td>
                             <td>{{ $item->IdTypeArticle }}</td>
+                            <td>{{ $item->classe }}</td>
                             <td>
                                 <a href="{{ route('articles.edit', $item->id) }}" class="btn btn-warning"><i
                                         class="la la-edit"></i></a>
@@ -87,9 +89,24 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="PrixArticle">Quantité</label>
+                            <input type="text" class="form-control form-control" id="PrixArticle" name="quantite"
+                                placeholder="Quantité">
+                        </div>
+
+                        <div class="form-group">
                             <label for="ImageArticle">Image article</label>
                             <input type="file" class="form-control form-control" id="ImageArticle" name="ImageArticle"
                                 placeholder="Image article">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="classe">Classe</label>
+                            <select class="form-control form-select" name="classe" id="classe">
+                                <option value="cp1">CP1</option>
+                                <option value="cp2">CP2</option>
+                                <option value="ce1">CE1</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -111,14 +128,24 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="idkitscolaire">Kit scolaire</label>
+                            <select class="form-control form-select" name="idkitscolaire" id="idkitscolaire">
+                                <option value="" selected>Pas de type kit scolaire</option>
+                                @foreach (App\Models\Tb_kitscolaire::all() as $ent)
+                                    <option value="{{ $ent->id }}">{{ $ent->LibelleKitscolaire }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{--<div class="form-group">
                             <label for="Entreprise">Entreprise</label>
                             <select class="form-control form-select" name="entreprise_id" id="Entreprise">
                                 @foreach (App\Models\EntrepriseModel::all() as $ent)
                                     <option value="{{ $ent->id }}">{{ $ent->LibelleEntreprise }}</option>
                                 @endforeach
                             </select>
-                        </div>
-
+                        </div> --}}
+                        <input type="text" name="entreprise_id" value="1" hidden="hidden">
                         <div>
                             <button type="button" class="btn btn-wating" data-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-success">Sauvegarder</button>

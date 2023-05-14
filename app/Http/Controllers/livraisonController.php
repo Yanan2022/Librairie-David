@@ -7,13 +7,28 @@ use Illuminate\Support\Facades\DB;
 use App\Models\LivraisonModel;
 use App\Models\vehiculeModel;
 use App\Http\Requests\StoreLivraisonRequest;
+use Auth;
+use App\Models\Commande;
 
 class livraisonController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware('auth');
+    }
     //
     public function index()
     {
-        return view("livraison.index",['liv' => DB::table('livraison_models')->get()]);
+        if (Auth::id() == 1) {
+            # code...
+            $livraisons = LivraisonModel::all();
+            return view("livraison.index",compact('livraisons'));
+        }else {
+            # code...
+            $livraisons =  LivraisonModel::where('user_id', '=', Auth::id())->get();
+            return view("livraison.index",compact('livraisons'));
+        }
+
     }
 
 
@@ -67,5 +82,33 @@ class livraisonController extends Controller
         return response()->json([
             "message" => "Livraison supprimée !",
         ]);
+    }
+
+    public function commandeEmporte($id)
+    {
+        # code...
+        $livraison = LivraisonModel::find($id);
+        $livraison->etat = "Emporté";
+        $livraison->update();
+
+        $commande = $livraison->commande_id;
+        $commande = Commande::find($commande);
+        $commande->etat = "Emporté";
+        $commande->update();
+        return redirect()->route("livs.index");
+    }
+
+    public function commandeLivre($id)
+    {
+        # code...
+        $livraison = LivraisonModel::find($id);
+        $livraison->etat = "Livré";
+        $livraison->update();
+
+        $commande = $livraison->commande_id;
+        $commande = Commande::find($commande);
+        $commande->etat = "Livré";
+        $commande->update();
+        return redirect()->route("livs.index");
     }
 }

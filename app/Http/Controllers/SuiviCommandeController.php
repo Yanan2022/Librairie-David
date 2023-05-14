@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 use Session;
+use App\Models\Commentaire;
 
 class SuivicommandeController extends Controller
 {
@@ -167,5 +168,39 @@ class SuivicommandeController extends Controller
         ]);
 
         return $panier;
+    }
+
+    public function annulerCommande($id)
+    {
+        // $livraison = LivraisonModel::find($id);
+        // $livraison->etat = "Annulé";
+        // $livraison->update();
+
+        // $commande = $livraison->commande_id;
+        $commande = Commande::find($id);
+        $commande->etat = "Annulé";
+        $commande->update();
+        return redirect()->route("createCommentaire");
+        # code...
+    }
+
+    public function createCommentaire()
+    {
+        # code...
+        return view("commentaire.create");
+    }
+
+    public function storeCommentaire(Request $request)
+    {
+        # code...
+        $request->validate([
+            'description' => 'required',
+        ]);
+        $input = $request->all();
+
+       $article = new Commentaire($input);
+       $article->save();
+       return redirect()->route('accueil')
+                        ->with('success','Création effectuée.');
     }
 }

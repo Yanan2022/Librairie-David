@@ -11,7 +11,7 @@
                 @method("patch")
                 <div class="form-group">
                     <label for="LibelleArticle">Libellé </label>
-                    <input type="text" class="form-control form-control" id="LibelleArticle" name="LibelleArticle"
+                    <input type="text" class="form-control form-control" id="LibelleArticle" name="libelle"
                         placeholder="Libellé article" value="{{ old('libelle', $encart->libelle) }}">
                 </div>
 

@@ -27,6 +27,12 @@ use App\Http\Controllers\classeController;
 use App\Http\Controllers\encartController;
 use App\Http\Controllers\banniereController;
 use App\Http\Controllers\SuivicommandeController;
+use App\Http\Controllers\kitscolaireController;
+use App\Http\Controllers\livreurController;
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\codepromoController;
+use App\Http\Controllers\commentaireController;
+use App\Http\Controllers\couponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +69,8 @@ Route::get('/vehicule', [vehiculeController::class, 'index']);
 
 Route::get('/TColis', [TypeColisController::class, 'index']);
 Route::get('/liv', [livraisonController::class, 'index']);
+Route::get('/commandeEmporte/{id}', [livraisonController::class, 'commandeEmporte'])->name('commandeEmporte');
+Route::get('/commandeLivre/{id}', [livraisonController::class, 'commandeLivre'])->name('commandeLivre');
 Route::get('/liv/{id}', [livraisonController::class, 'show']);
 Route::get('/liv/{id}/edit', [livraisonController::class, 'edit']);
 Route::get('/listeEnt', [listeEntrepController::class, 'index']);
@@ -70,6 +78,7 @@ Route::get('/listeEnt', [listeEntrepController::class, 'index']);
 //c'est le front
 Route::get('/listeEntr/{id}', [listeEntrepController::class, 'show']);
 Route::get('/', [catalogueController::class, 'index'])->name('accueil');
+Route::get('/detailCategories/{id}', [catalogueController::class, 'show'])->name('detailCategories');
 Route::get('/fourniture', [catalogueController::class, 'fourniture'])->name('fourniture');
 Route::get('/accueil', [HomeController::class, 'index']);
 Route::get('/signup', [HomeController::class, 'signup'])->name('signup');
@@ -83,7 +92,12 @@ Route::post('/get-results', [HomeController::class, 'typeaheadSearch'])->name('g
 //Route::get('/get-results', 'HomeController@typeaheadSearch')->name('get-results');
 Route::post('/upload', [HomeController::class, 'upload'])->name('upload');
 Route::get('/listeCommande', [SuivicommandeController::class, 'listeCommande'])->name('listeCommande');
+Route::get('/annulerCommande/{id}', [SuivicommandeController::class, 'annulerCommande'])->name('annulerCommande');
+Route::post('/storeCommentaire', [SuivicommandeController::class, 'storeCommentaire'])->name('storeCommentaire');
+Route::get('/createCommentaire', [SuivicommandeController::class, 'createCommentaire'])->name('createCommentaire');
 Route::get('/detailCommande/{commande}', [SuivicommandeController::class, 'detailCommande'])->name('detailCommande');
+Route::get('/voir_pdf/{id}', [PdfController::class, 'voir_pdf'])->name('voir_pdf');
+Route::get('/pdfs', [PdfController::class, 'index'])->name('index');
 
 Route::get('/cp1', [HomeController::class, 'cp1'])->name('cp1');
 Route::get('/cp2', [HomeController::class, 'cp2'])->name('cp2');
@@ -91,21 +105,27 @@ Route::get('/ce1', [HomeController::class, 'ce1'])->name('ce1');
 Route::get('/ce2', [HomeController::class, 'ce2'])->name('ce2');
 Route::get('/cm1', [HomeController::class, 'cm1'])->name('cm1');
 Route::get('/cm2', [HomeController::class, 'cm2'])->name('cm2');
-Route::get('/6ieme', [HomeController::class, '6ieme'])->name('6ieme');
-Route::get('/5ieme', [HomeController::class, '5ieme'])->name('5ieme');
-Route::get('/4ieme', [HomeController::class, '4ieme'])->name('4ieme');
-Route::get('/3ieme', [HomeController::class, '3ieme'])->name('3ieme');
-Route::get('/2nd', [HomeController::class, '2nd'])->name('2nd');
-Route::get('/1ere', [HomeController::class, '1ere'])->name('1ere');
-Route::get('/tle', [HomeController::class, 'tle'])->name('tle');
+Route::get('/6ieme', [HomeController::class, 'sixieme'])->name('sixieme');
+Route::get('/5ieme', [HomeController::class, 'cinquieme'])->name('cinquieme');
+Route::get('/4ieme', [HomeController::class, 'quatrieme'])->name('quatrieme');
+Route::get('/3ieme', [HomeController::class, 'troisieme'])->name('troisieme');
+Route::get('/2nde', [HomeController::class, 'seconde'])->name('seconde');
+Route::get('/1ere', [HomeController::class, 'premiere'])->name('premiere');
+Route::get('/tle', [HomeController::class, 'terminal'])->name('terminal');
 
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
+
 Route::resource('articles', articles::class);
+Route::resource('commentaires', commentaireController::class);
+Route::resource('coupons', couponController::class);
+Route::resource('codepromos', couponController::class);
+Route::resource('livreurs', livreurController::class);
 Route::resource('bannieres', banniereController::class);
 Route::resource('encarts', encartController::class);
 Route::resource('classes', classeController::class);
 Route::resource('kits', kitController::class);
+Route::resource('kitscolaires', kitscolaireController::class); //les kits scolaires
 Route::resource('categories', catEntrepriseController::class);
 Route::resource('entreprises', entrepriseController::class);
 Route::resource('catArts', typearticleController::class);
@@ -120,10 +140,21 @@ Route::post("/commandes/{commande}/validate", [CommandeController::class, 'valid
 Route::match(['get', 'post'], "/commandes/{commande}/delivery-mode", [CommandeController::class, 'choisirLivreur'])->name("commandes.choose-delivery-mode");
 
 Route::get('article/{article}/ajouter-au-panier', [PanierController::class, 'ajouterArticle'])->name("panier.ajouter-article");
-Route::get('kit/{kit}/ajout-au-panier', [PanierkitController::class, 'ajouterKit'])->name("panier.ajouter-kit");
+
+Route::get('kitscolaire/{kitscolaire}/ajout-au-panier', [PanierkitController::class, 'ajouterKit'])->name("panier.ajouter-kit");
+Route::get('kitscolaire/{kitscolaire}/retire-du-panier', [PanierkitController::class, 'retirerKit'])->name("panier.retirer-kit");
+Route::get('panier/viderkit', [PanierkitController::class, 'vider'])->name("panier.viderkit");
+Route::get('kits', [PanierkitController::class, 'index'])->name("kits.index");
+Route::get('detail/{kitscolaire}', [PanierkitController::class, 'detail'])->name("kitscolaire.detail");
+
 Route::get('article/{article}/retirer-du-panier', [PanierController::class, 'retirerArticle'])->name("panier.retirer-article");
 Route::get('panier', [PanierController::class, 'index'])->name("panier.index");
+Route::post('coupon', [PanierController::class, 'storeCoupon'])->name("panier.store.coupon"); //coupon
+Route::delete('coupon', [PanierController::class, 'destroyCoupon'])->name("panier.destroy.coupon"); //coupon
+Route::get('panierScanner', [PanierController::class, 'panierScanner'])->name("panier.scanner");
+Route::get('panierkit', [PanierkitController::class, 'panierkit'])->name("panier.panierkit");
 Route::get('panier/vider', [PanierController::class, 'vider'])->name("panier.vider");
+
 Route::get('kitcommande/{id}', [PanierkitController::class, 'create'])->name("kitcommande");
 Route::post('kitStore', [PanierkitController::class, 'store'])->name("kitStore");
 

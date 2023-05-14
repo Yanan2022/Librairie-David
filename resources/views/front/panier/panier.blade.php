@@ -19,7 +19,10 @@
             <div class=" main-content-area">
 
                 <div class="wrap-iten-in-cart">
-                    <h3 class="box-title">Article</h3>
+                    <h3 class="box-title">
+                        Article
+                        <a href="#">Imprimer</a>
+                    </h3>
                     <ul class="products-cart">
                         @foreach ($panier->articles as $article)
                             <li class="pr-cart-item">
@@ -37,10 +40,10 @@
                                     <div class="quantity-input">
                                         <input type="text" name="product-quatity" value="{{ $article->pivot->quantite }}" data-max="120" pattern="[0-9]*" readonly>
                                         <a href="{{ route('panier.retirer-article', ["article" => $article->id, "qte" => 1]) }}">
-                                            <img src="{{ asset('boutons/moins.png') }}" alt="moins">
+                                            <img src="{{ asset('boutons/moins.PNG') }}" alt="moins">
                                         </a>
                                         <a href="{{ route('panier.ajouter-article', ["article" => $article->id, "qte" => 1]) }}">
-                                            <img src="{{ asset('boutons/plus.png') }}" alt="plus">
+                                            <img src="{{ asset('boutons/plus.PNG') }}" alt="plus">
                                         </a>
                                     </div>
                                 </div>
@@ -63,18 +66,72 @@
                 <div class="summary">
                     <div class="order-summary">
                         <h4 class="title-box">Résumé</h4>
-                        <p class="summary-info"><span class="title">Sous-total</span><b
-                                class="index">{{ $panier->total }} FCFA</b></p>
-                        <p class="summary-info"><span class="title">Livraison</span><b
-                                class="index">Livraison gratuite</b></p>
-                        <p class="summary-info total-info "><span class="title">Total</span><b
-                                class="index">{{ $panier->total }} FCFA</b></p>
+                        @if (request()->session()->has('coupon'))
+                            <p class="summary-info"><span class="title">Sous-total</span><b
+                            class="index">{{ $panier->total }} FCFA</b></p>
+                            <p class="summary-info">
+                                <span class="title">
+                                    Coupon
+                                    {{ request()->session()->get('coupon')['code'] }}
+                                </span>
+                                <b class="index">
+                                    {{ request()->session()->get('coupon')['remise'] }} FCFA
+                                </b>
+                            </p>
+                            <p class="summary-info">
+                                <form action="{{ route('panier.destroy.coupon') }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-small btn-outline-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </p>
+                            <p class="summary-info total-info "><span class="title">Total</span><b
+                                class="index">{{ $panier->total - request()->session()->get('coupon')['remise'] }} FCFA</b></p>
+                        @else
+                            <p class="summary-info"><span class="title">Sous-total</span><b
+                            class="index">{{ $panier->total }} FCFA</b></p>
+                            <p class="summary-info total-info "><span class="title">Total</span><b
+                            class="index">{{ $panier->total }} FCFA</b></p>
+                        @endif
+
                     </div>
                     <div class="checkout-info">
                         <label class="checkbox-field">
                             <input class="frm-input " name="have-code" id="have-code" value=""
-                                type="checkbox"><span>J'ai un code promo</span>
+                                type="checkbox">
+                                <span>J'ai un code promo</span>
                         </label>
+                        @if (!request()->session()->has('coupon'))
+                                <div class="summary-item">
+                                    @if (Session::has('status'))
+                                    <div class="alert alert-danger">
+                                        {{Session::get('status')}}
+                                    </div>
+                                @endif
+                                @if (count($errors)>0)
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error )
+                                                <li>{{$errors}}<li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                                <form action="{{ route('panier.store.coupon') }}" method="POST">
+                                    @csrf
+                                    <h4 class="title-box">Coupon code</h4>
+                                    <p class="row-in-form">
+                                        <label for="coupon-code">Entrez votre code coupon:</label>
+                                        <input type="text" name="code">
+                                    </p>
+                                    <button type="submit" class="btn btn-small">Appliquer</button>
+                                </form>
+                            </div>
+                        @else
+                            <p>Un coupon est deja appliqué</p>
+                        @endif
                         <a class="btn btn-checkout" href="{{ route("commandes.create") }}">Passer ma commande</a>
                         <a class="link-to-shop" href="{{ url("/") }}">Continuer mes achats<i
                                 class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>

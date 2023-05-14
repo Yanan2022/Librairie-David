@@ -21,7 +21,7 @@
 		<div class="container pb-60">
 			<div class="row">
 				<div class="col-md-12 text-center">
-					<h2>Vous avez bien défini "{{ $type_vehicule->LibelleType }}" comme mode de livraison pour cette commande !</h2>
+					<h2>Vous avez bien défini "{{-- $type_vehicule->LibelleType --}}" comme mode de livraison pour cette commande !</h2>
                     <p>Une requête va être envoyée aux livreurs à proximité. Merci !</p>
                     <a href="{{ route("commandes.index") }}" class="btn btn-submit btn-submitx">Voir les autres commandes</a>
 				</div>

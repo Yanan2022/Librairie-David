@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commande;
+use App\Models\User;
 use App\Models\EntrepriseModel;
+use App\Models\LivraisonModel;
 use App\Models\Panier;
 use App\Http\Requests\StoreCommandeRequest;
 use App\Http\Requests\UpdateCommandeRequest;
@@ -11,9 +13,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 use Session;
+use App\Events\CommandeCreatedEvent;
 
 class CommandeController extends Controller
 {
+    // public function __construct()
+    // {
+    //   $this->middleware('auth');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -48,6 +55,7 @@ class CommandeController extends Controller
             return redirect('login-client');
         }else{
             $panier = $this->_getPanier($request);
+            //return $panier->total;
             if($panier->articles->isNotEmpty()) {
                 return view("commandes.create", compact('panier'));
             } else {
@@ -73,6 +81,8 @@ class CommandeController extends Controller
         $commande = new Commande($input);
         $commande->uuid = $panier->uuid;
         $commande->save();
+        //return $commande;
+        event(new CommandeCreatedEvent($commande));
 
         foreach ($panier->articles as $article) {
             $commande->articles()->attach($article->id, [
@@ -146,9 +156,27 @@ class CommandeController extends Controller
 
     public function choisirLivreur(Request $request, Commande $commande)
     {
-        if(!empty($request->type_vehicule_id)) {
 
-            $commande->update(["type_vehicule_id" => $request->type_vehicule_id]);
+
+        if(!empty($request->type_vehicule_id)) {
+            $livreur_id = $request->type_vehicule_id;
+            $livraison = User::find($livreur_id);
+            $livreur = new LivraisonModel();
+            $livreur->nomclient = $commande->nom;
+            $livreur->prenomclient = $commande->prenoms;
+            $livreur->contactclient = $commande->telephone;
+            $livreur->ville = $commande->ville;
+            $livreur->commune = $commande->commune;
+            $livreur->quartier = $commande->quartier;
+            $livreur->etat = $commande->etat;
+            $livreur->commande_id = $commande->id;
+            $livreur->commande_montant = $commande->total;
+            $livreur->user_id = $request->type_vehicule_id;
+            $livreur->nomlivreur = $livraison->nom;
+            $livreur->prenomlivreur = $livraison->prenom;
+            $livreur->contactlivreur = $livraison->contact;
+            $livreur->save();
+            //$commande->update(["type_vehicule_id" => $request->type_vehicule_id]);
 
             return view("commandes.delivery-set", [
                 'type_vehicule' => \App\Models\typevehiculeModel::find($request->type_vehicule_id),
@@ -156,7 +184,7 @@ class CommandeController extends Controller
             ]);
         }
 
-        $types_vehicules = \App\Models\typevehiculeModel::all();
+        $types_vehicules = \App\Models\User::all();
         return view("commandes.mode-livraison", compact('commande', 'types_vehicules'));
     }
 

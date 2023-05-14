@@ -13,6 +13,9 @@ use App\Models\typearticleModel;
 use App\Models\EntrepriseModel;
 use App\Models\Client;
 use Session;
+use App\Models\Panier;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 
 class HomeController extends Controller
 {
@@ -53,6 +56,7 @@ class HomeController extends Controller
         $this->validate($request, [
             'nom'=>'required',
             'prenom'=>'required',
+            'numero'=>'required',
             'email'=>'email|required|unique:clients',
             'password'=>'required|min:4'
         ]);
@@ -60,6 +64,7 @@ class HomeController extends Controller
         $client->nom = $request->input('nom');
         $client->prenom = $request->input('prenom');
         $client->email = $request->input('email');
+        $client->numero = $request->input('numero');
         $client->password = bcrypt($request->input('password'));
         $client->save();
         return redirect()->route('login-client')->with('status', 'votre compte a été créé avec succès');
@@ -109,13 +114,14 @@ class HomeController extends Controller
 
     public function upload(Request $request)
     {
-        //return $test  = Tb_articles::where('LibelleArticle','like', "%mathématiques%")->get();
+        if (empty(Session::get('client')['nom'])) {
+            return redirect('login-client');
+        }else {
         $request->validate([
             "image"=>"required|mimes:png,jpg,jpeg|max:10000"
         ]);
-        //$classe = $request->get('classe');
-        //$classe =  Tb_articles::where('classe','=', $classe);
-        // $classe = Tb_articles::query();
+        $classe = $request->get('classe');
+        $classe =  Tb_articles::where('classe','=', $classe);
             if ($image = $request->file('image')) {
                 $destinationPath = 'images/';
                 $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
@@ -128,58 +134,44 @@ class HomeController extends Controller
             $pieces = preg_split("/[\\r\\t\\n]+/i", $text);
 
             //fonction de recherche pour la reconnaissance avec le ocr
+            $resultat = collect();
+            for ($i=0; $i < count($pieces)  ; $i++) {
+                # code...
+                $query = $classe;
+                $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
+                $piece = str_replace($reservedSymbols, '', $pieces);
+                $piece = implode('+',$piece);
+                $resultat = $resultat->concat($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
+                        ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
+                        ->orderByDesc('relevance_score')->get());
+            }
 
-            // $resultat = collect();
-            // foreach($pieces as $piece){
-            //     $query = $classe;
-            //     $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
-            //     $piece = str_replace($reservedSymbols, '', $piece);
-            //     $piece = implode('+',explode(' ',$piece));
-            //     $resultat = $resultat->merge($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
-            //             ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
-            //             ->orderByDesc('relevance_score')->get());
-            // }
+            $articles = $resultat->unique('id');
 
-            // $resultat = $resultat->unique('id');
+            foreach ($articles as $article) {
+                # code...
+                $panier = $this->_getPanier($request);
+                $panier->addArticle($article, 1)->refresh();
+            }
 
-        //  $articles = $resultat;//response()->json($resultat); //->sum('PrixArticle')
-        //  $cotation = $resultat->sum('PrixArticle');//response()->json($resultat); //->sum('PrixArticle')
-
-        // }
-        // DB::table('songs')->select('*')->selectRaw("MATCH (title) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$s])
-        // ->whereRaw("MATCH (title) AGAINST (? IN BOOLEAN MODE)", $s)
-        // ->orderByDesc('relevance_score')->paginate(30);
-
-
-        $table = 'tb_kits';//request()->get('nomTable');
-        $table = $table;
-        $text = request()->get('classe');
-        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
-
-
-
-        $requete = " select * from ".$table." where ";
-
-        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
-        foreach($result as $row)
-        {
-            $term = $row->Field;
-            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
-
+            $panier = $this->_getPanier($request);
+            $produits =Tb_articles::whereIn('id',[3,4,5,6,7])->get();
+            return view('front.catalogue.scanner', compact('panier', 'pieces','produits'));
+            
         }
-        $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
-        return view('front.catalogue.scanner', compact('articles', 'pieces'));
     }
 
-    public function ocr(Request $request)
+    private function _getPanier(Request $request)
     {
-        return "ok";
+        $uuid = $request->cookie('uuid', Str::uuid());
+        Cookie::queue('uuid', $uuid, 30*24*60); // 30 jours (en minutes)
+        $panier = Panier::firstOrCreate([
+            'uuid' => $uuid,
+            'etat' => 'actif',
+        ]);
 
-
+        return $panier;
     }
 
 
@@ -193,11 +185,7 @@ class HomeController extends Controller
 
     public function query_get_search_dynamique()
     {
-        // $tesseractOcr = new TesseractOCR('catalogue/assets/images/liste_fourniture.jpeg');
-        // //$tesseractOcr = new TesseractOCR($fileNameTostore);
-        // $text = $tesseractOcr->run();
-        // $pieces = array();
-        // return $pieces = preg_split("/[\\r\\t\\n]+/i", $text);
+        
         $pieces = [
             "JSapprends a la maternelle : Mathématique",
             "‘Japprends a la maternelle : coloriage",
@@ -254,10 +242,11 @@ class HomeController extends Controller
 
     public function cp1()
     {
+        
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = 'cp1';//request()->get('text');
+        $text = 'cp1';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
 
@@ -279,13 +268,13 @@ class HomeController extends Controller
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
         $classe = $articles["0"]->classe;
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises', 'classe'));
+        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises', 'classe'));
     }
 
     public function search()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
         $text = request()->get('search');
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
@@ -322,70 +311,34 @@ class HomeController extends Controller
         $request->validate([
             "image"=>"required|mimes:png,jpg,jpeg|max:10000"
         ]);
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
         $text = request()->get('classe');
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
         $requete = " select * from ".$table." where ";
-
         $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
         foreach($result as $row)
         {
             $term = $row->Field;
             $requete =$requete.' '. $term.' like '. $text.'  OR   ';
-
         }
         $requete = substr($requete,0,strlen($requete)-7);
-
         $articles =  $this->get_search_dynamique($requete);
-
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-
         return view('front.catalogue.tri', compact('articles', 'categories', 'entreprises'));
 
-        // $image = $request->get('classe');
-        // if ($image = $request->file('image')) {
-        //     $destinationPath = 'images/';
-        //     $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-        //     $fileNameTostore = $image->move($destinationPath, $profileImage);
-        //     $input['ImageArticle'] = "$profileImage";
-        // }
-        // $tesseractOcr = new TesseractOCR($fileNameTostore);
-        // $text = $tesseractOcr->run();
-        // $pieces = array();
-        // $pieces = preg_split("/[\\r\\t\\n]+/i", $text);
-        // $resultat = collect();
-        // foreach($pieces as $piece){
-        //     $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*','cahier','Cahier', 'livre', 'bic', 'de', 'Mathématiques', 'maternelle', 'Paquet'];
-        //     $piece = str_replace($reservedSymbols, '', $piece);
-        //     $resultat = $resultat->merge(Tb_articles::select('*')->selectRaw("MATCH (LibelleArticle,classe) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
-        //             ->whereRaw("MATCH (LibelleArticle,classe) AGAINST (? IN BOOLEAN MODE)", $piece)
-        //             ->orderByDesc('relevance_score')->get());
-        // }
-
-        // $resultat = $resultat->unique('id');
-
-        // return response()->json($resultat);
     }
 
     public function cp2()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = 'cp2';//request()->get('text');
+        $text = 'cp2';
          $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
-
-
-
         $requete = " select * from ".$table." where ";
-
         $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
         foreach($result as $row)
         {
             $term = $row->Field;
@@ -397,18 +350,15 @@ class HomeController extends Controller
         $articles =  $this->get_search_dynamique($requete);
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
-        //                          ->paginate(6);
-         //return response()->json($search);
          return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
     }
 
     public function ce1()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = 'ce1';//request()->get('text');
+        $text = 'ce1';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -427,19 +377,15 @@ class HomeController extends Controller
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
-        //                          ->paginate(6);
-         //return response()->json($search);
-
          return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
     }
 
     public function ce2()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = 'ce2';//request()->get('text');
+        $text = 'ce2';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -458,19 +404,15 @@ class HomeController extends Controller
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
-        //                          ->paginate(6);
-         //return response()->json($search);
-
          return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
     }
 
     public function cm1()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = 'cm1';//request()->get('text');
+        $text = 'cm1';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -526,4 +468,203 @@ class HomeController extends Controller
 
          return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
     }
+
+    public function sixieme()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = '6ieme';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function cinquieme()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = '5ieme';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function quatrieme()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = '4ieme';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function troisieme()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = '3ieme';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function seconde()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = '2nd';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function premiere()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = '1ere';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function terminal()
+    {
+        # code...
+        $table = 'tb_articles';//request()->get('nomTable');
+        $table = $table;
+        $text = 'tle';//request()->get('text');
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+
+        $requete = " select * from ".$table." where ";
+
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+
+        $articles =  $this->get_search_dynamique($requete);
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+
+
 }

@@ -27,9 +27,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="PrixArticle">Quantité</label>
+                    <input type="text" class="form-control form-control" id="quantite" name="quantite"
+                        placeholder="Quantité" value="{{ old('quantite', $article->quantite) }}">
+                </div>
+
+                <div class="form-group">
                     <label for="ImageArticle">Image article</label>
                     <input type="file" class="form-control form-control" id="ImageArticle" name="ImageArticle"
                         placeholder="Image article">
+                </div>
+
+                <div class="form-group">
+                    <label for="classe">Classe</label>
+                    <select class="form-control form-select" name="classe" id="classe">
+                        <option value="cp1">CP1</option>
+                        <option value="cp2">CP2</option>
+                        <option value="ce1">CE1</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -53,6 +68,15 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="idkitscolaire">Kit scolaire</label>
+                    <select class="form-control form-select" name="idkitscolaire" id="idkitscolaire">
+                        @foreach (App\Models\Tb_kitscolaire::all() as $ent)
+                            <option value="{{ $ent->id }}" @if (old('idkitscolaire', $article->idkitscolaire) == $type->id) selected @endif>{{ $ent->LibelleKitscolaire }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{--<div class="form-group">
                     <label for="Entreprise">Entreprise</label>
                     <select class="form-control form-select" name="entreprise_id" id="Entreprise">
                         @foreach (App\Models\EntrepriseModel::all() as $ent)
@@ -60,7 +84,7 @@
                                 {{ $ent->LibelleEntreprise }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 <div>
                     <a href="{{ url()->previous() }}" class="btn btn-wating" data-dismiss="modal">Fermer</a>

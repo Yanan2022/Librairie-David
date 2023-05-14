@@ -113,14 +113,14 @@
                             <ul class="list-category">
                                 @foreach ($categories as $categorie)
                                     <li class="category-item has-child-cate">
-                                        <a href="{{ route('catArts.show', $categorie) }}"
+                                        <a href="{{ route('detailCategories', $categorie) }}"
                                             class="cate-link">{{ $categorie->LibCategorieArt }}</a>
                                         @if ($categorie->sous_types->isNotEmpty())
                                             <span class="toggle-control">+</span>
                                             <ul class="sub-cate">
                                                 @foreach ($categorie->sous_types as $sous_categorie)
                                                     <li class="category-item">
-                                                        <a href="{{ route('catArts.show', $sous_categorie) }}"
+                                                        <a href="{{ route('detailCategories', $sous_categorie) }}"
                                                             class="cate-link">{{ $sous_categorie->LibCategorieArt }}
                                                             ({{ $sous_categorie->articles->count() }})
                                                         </a>
@@ -171,36 +171,36 @@
                                     </a>
                                 </li>
                                 <li class="list-item">
-                                    <a class="filter-link " href="{{ route('6ieme')}}">
+                                    <a class="filter-link " href="{{ route('sixieme')}}">
                                         6ième
                                     </a>
                                 </li>
                                 <li class="list-item">
-                                    <a class="filter-link " href="{{ route('5ieme')}}">
+                                    <a class="filter-link " href="{{ route('cinquieme')}}">
                                         5ième
                                     </a>
                                 </li>
                                 <li class="list-item">
-                                    <a class="filter-link " href="{{ route('4ieme')}}">
+                                    <a class="filter-link " href="{{ route('quatrieme')}}">
                                         4ième
                                     </a>
                                 </li>
                                 <li class="list-item">
-                                    <a class="filter-link " href="{{ route('3ieme')}}">
+                                    <a class="filter-link " href="{{ route('troisieme')}}">
                                         3ième
                                     </a>
                                 </li>
                                 <li class="list-item">
-                                    <a class="filter-link " href="{{ route('2nd')}}">
+                                    <a class="filter-link " href="{{ route('seconde')}}">
                                         2nd
                                     </a>
                                 </li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('1ere')}}">
+                                <li class="list-item"><a class="filter-link " href="{{ route('premiere')}}">
                                         1ère
                                     </a>
                                 </li>
                                 <li class="list-item">
-                                    <a class="filter-link " href="{{ route('tle')}}">
+                                    <a class="filter-link " href="{{ route('terminal')}}">
                                         Tle
                                     </a>
                                 </li>
@@ -212,6 +212,46 @@
 
                 </div>
                 <!--end sitebar-->
+                <div class="wrap-show-advance-info-box style-1 box-in-site">
+                    <h3 class="title-box">Les kits scolaire</h3>
+                    <div class="wrap-products">
+                        <div class="products slide-carousel owl-carousel style-nav-1 equal-container" data-items="5"
+                            data-loop="false" data-nav="true" data-dots="false"
+                            data-responsive='{"0":{"items":"1"},"480":{"items":"2"},"768":{"items":"3"},"992":{"items":"3"},"1200":{"items":"5"}}'>
+
+                            @foreach ($kitscolaires as $item )
+                                <div class="product product-style-2 equal-elem ">
+                                    <div class="product-thumnail">
+                                        <a href="{{ route('panier.ajouter-kit', $item->id) }}" title="T-Shirt Raw Hem Organic Boro Constrast Denim">
+                                            <figure>
+                                                <img src="/images/{{ $item->ImageKitscolaire }}" width="214" height="214" alt="T-Shirt Raw Hem Organic Boro Constrast Denim">
+                                            </figure>
+                                        </a>
+                                        <div class="group-flash">
+                                            <span class="flash-item new-label">Nouveaux</span>
+                                        </div>
+                                        <div class="wrap-btn">
+                                            <a href="{{ route('articles.show', $item->id) }}" class="function-link">Vue</a>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <a href="{{ route('panier.ajouter-kit', $item->id) }}" class="product-name">
+                                            <span>
+                                                {{ $item->LibelleKitscolaire }}
+                                            </span>
+                                        </a>
+                                        <div class="wrap-price">
+                                            <span class="product-price">{{ $item->PrixKitscolaire }} FCFA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <!--End wrap-products-->
+                </div>
+
+                <!--la liste des nouveaux produits -->
                 <div class="wrap-show-advance-info-box style-1 box-in-site">
                     <h3 class="title-box">Les nouveaux produits</h3>
                     <div class="wrap-products">

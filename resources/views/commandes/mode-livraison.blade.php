@@ -23,13 +23,13 @@
                         <div class="summary-item payment-method">
                             <h4 class="title-box">Mode de Livraison</h4>
                             <p class="summary-info"><span
-                                    class="title">{{ $types_vehicules->first()->LibelleType }} (par
+                                    class="title">{{ $types_vehicules->first()->nom }} (par
                                     défaut)</span></p>
                             <div class="choose-payment-methods">
                                 @foreach ($types_vehicules as $key => $type)
                                     <label class="payment-method">
                                         <input name="type_vehicule_id" id="payment-method-bank{{ $type->id }}" value="{{ $type->id }}" type="radio" @if(!$key) checked @endif>
-                                        <span>{{ $type->LibelleType }}</span>
+                                        <span>{{ $type->nom }}</span>
                                         {{-- <span class="payment-desc">But the majority have suffered alteration in some form,
                                             by
                                             injected humour, or randomised words which don't look even slightly

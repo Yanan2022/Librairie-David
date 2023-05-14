@@ -40,7 +40,7 @@
                             <a href="{{ route('listeCommande') }}" class="link-direction">
                                 <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                                 <div class="left-info">
-                                    <span class="index">{{Session::get('panier')}}</span>
+                                    <span class="index">0</span>
                                     <span class="title">Panier</span>
                                 </div>
                             </a>
@@ -63,9 +63,7 @@
                                 <a href="{{ url('/') }}" class="link-term mercado-item-title">
                                     <i class="fa fa-home" aria-hidden="true"></i></a>
                             </li>
-                            <li class="menu-item">
-                                <a href="{{ route('speciale') }}" class="link-term mercado-item-title">Commmande spéciale</a>
-                            </li>
+                           
 
                             @if (Session::has('client'))
                                 <li class="menu-item">
@@ -85,6 +83,9 @@
                                 </li>
                                 <li class="menu-item">
                                     <a href="{{route('login-client')}}" class="link-term mercado-item-title">Connexion</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{route('kits.index')}}" class="link-term mercado-item-title">kit scolaire</a>
                                 </li>
                             @endif
 

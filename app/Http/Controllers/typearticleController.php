@@ -9,6 +9,10 @@ use App\Models\Tb_articles;
 
 class typearticleController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware('auth');
+    }
     //
     public function index()
     {

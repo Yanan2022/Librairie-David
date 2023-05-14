@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
 	<base href="/" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>Tableau de bord</title>
@@ -127,14 +128,18 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="fontend/assets/img/profile.jpg" alt="user-img" width="36" class="img-circle"><span >Hizrian</span></span> </a>
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="fontend/assets/img/profile.jpg" alt="user-img" width="36" class="img-circle">
+                                <span >{{Auth::user()['nom'].' '.Auth::user()['prenom']}}</span></span>
+                            </a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
 										<div class="u-img"><img src="fontend/assets/img/profile.jpg" alt="user"></div>
 										<div class="u-text">
-											<h4>Hizrian</h4>
-											<p class="text-muted">hello@themekita.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+											<h4>{{Auth::user()['nom'].' '.Auth::user()['prenom']}}</h4>
+											<p class="text-muted">
+                                                {{Auth::user()['email']}}
+                                            </p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
 										</div>
 									</li>
 									<div class="dropdown-divider"></div>
@@ -142,7 +147,6 @@
 									<a class="dropdown-item" href="#"></i> My Balance</a>
 									<a class="dropdown-item" href="#"><i class="ti-email"></i> Inbox</a>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
 									<div class="dropdown-divider">
 
                                     </div>
@@ -169,13 +173,17 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="fontend/assets/img/profile.jpg">
+                            <img src="{{ asset('images/'.Auth::user()->photo) }}" class="img-circle user-img-circle" alt="photo">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									Touré Yanan
-									<span class="user-level">Administrateur</span>
+									{{Auth::user()['nom'].' '.Auth::user()['prenom']}}
+                                    @if (Auth::User()['role_id'] == 0)
+									    <span class="user-level">Administrateur</span>
+                                    @elseif (Auth::User()['role_id'] == 1)
+                                        <span class="user-level">Livreur</span>
+                                    @endif
 									<span class="caret"></span>
 								</span>
 							</a>
@@ -203,136 +211,164 @@
 						</div>
 					</div>
 					<ul class="nav">
-						<li class="nav-item active">
-							<a href="/">
-								<i class="la la-dashboard"></i>
-								<p>Accueil</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="/liv">
-								<i class="la la-automobile"></i>
-								<p>Livraison</p>
+                        @if(Auth::user()['role_id'] == 0 || Auth::user()['role_id'] == 1)
+                            <li class="nav-item active">
+                                <a href="/">
+                                    <i class="la la-dashboard"></i>
+                                    <p>Accueil</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/liv">
+                                    <i class="la la-automobile"></i>
+                                    <p>Livraison</p>
 
-							</a>
-						</li>
-                        <li class="nav-item">
-							<a href="/catArt">
-								<i class="la la-folder-o"></i>
-								<p>Categorie Artcles</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if(Auth::user()['role_id'] == 0)
+                            <li class="nav-item">
+                                <a href="/catArt">
+                                    <i class="la la-folder-o"></i>
+                                    <p>Categorie Artcles</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/article">
+                                    <i class="la la-keyboard-o"></i>
+                                    <p>Articles</p>
 
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="/article">
-								<i class="la la-keyboard-o"></i>
-								<p>Articles</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('kitscolaires.index')}}">
+                                    <i class="la la-keyboard-o"></i>
+                                    <p>Kits scolaires</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('kits.index')}}">
+                                    <i class="la la-keyboard-o"></i>
+                                    <p>Kits</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('accueil')}}">
+                                    <i class="la la-keyboard-o"></i>
+                                    <p>Libraire David</p>
 
-							</a>
-						</li>
-                        <li class="nav-item">
-							<a href="{{route('kits.index')}}">
-								<i class="la la-keyboard-o"></i>
-								<p>Kits</p>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{{route('accueil')}}">
-								<i class="la la-keyboard-o"></i>
-								<p>Libraire David</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/cout">
+                                    <i class="la la-money"></i>
+                                    <p>Cout</p>
 
-							</a>
-						</li>
-                        <li class="nav-item">
-							<a href="/cout">
-								<i class="la la-money"></i>
-								<p>Cout</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('livreurs.index')}}">
+                                    <i class="la la-money"></i>
+                                    <p>Livreur</p>
 
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="{{ route("commandes.index") }}">
-								<i class="la la-road"></i>
-								<p>Suivi des commandes</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('coupons.index')}}">
+                                    <i class="la la-money"></i>
+                                    <p>Code Promo</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('commentaires.index')}}">
+                                    <i class="la la-money"></i>
+                                    <p>Motif Commande Annulée</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route("commandes.index") }}">
+                                    <i class="la la-road"></i>
+                                    <p>Suivi des commandes</p>
 
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="/listeEnt">
-								<i class="la la-building"></i>
-								<p>Liste Entreprises/Boutiques</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/listeEnt">
+                                    <i class="la la-building"></i>
+                                    <p>Liste Entreprises/Boutiques</p>
 
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="/entreprise">
-								<i class="la la-building"></i>
-								<p>Entreprises/Boutiques</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/entreprise">
+                                    <i class="la la-building"></i>
+                                    <p>Entreprises/Boutiques</p>
 
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="/categorie">
-								<i class="la la-folder-o"></i>
-								<p>Categorie entreprise</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/categorie">
+                                    <i class="la la-folder-o"></i>
+                                    <p>Categorie entreprise</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-							<a href="{{ route('classes.index') }}">
-								<i class="la la-folder-o"></i>
-								<p>Classes</p>
+                            <li class="nav-item">
+                                <a href="{{ route('classes.index') }}">
+                                    <i class="la la-folder-o"></i>
+                                    <p>Classes</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-							<a href="{{ route('encarts.index') }}">
-								<i class="la la-folder-o"></i>
-								<p>Encart publicitaire</p>
+                            <li class="nav-item">
+                                <a href="{{ route('encarts.index') }}">
+                                    <i class="la la-folder-o"></i>
+                                    <p>Encart publicitaire</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
 
-                        <li class="nav-item">
-							<a href="{{ route('bannieres.index') }}">
-								<i class="la la-folder-o"></i>
-								<p>Bannière</p>
+                            <li class="nav-item">
+                                <a href="{{ route('bannieres.index') }}">
+                                    <i class="la la-folder-o"></i>
+                                    <p>Bannière</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
 
-						<li class="nav-item">
-							<a href="/pays">
-								<i class="la la-flag-o"></i>
-								<p>Pays</p>
+                            <li class="nav-item">
+                                <a href="/pays">
+                                    <i class="la la-flag-o"></i>
+                                    <p>Pays</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
 
-						<li class="nav-item">
-							<a href="/Tvehicule">
-								<i class="la la-flag-o"></i>
-								<p>Type Vehicule</p>
+                            <li class="nav-item">
+                                <a href="/Tvehicule">
+                                    <i class="la la-flag-o"></i>
+                                    <p>Type Vehicule</p>
 
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="/vehicule">
-								<i class="la la-flag-o"></i>
-								<p>Véhicule</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/vehicule">
+                                    <i class="la la-flag-o"></i>
+                                    <p>Véhicule</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
 
-						<li class="nav-item">
-							<a href="/TColis">
-								<i class="la la-flag-o"></i>
-								<p>Type colis</p>
+                            <li class="nav-item">
+                                <a href="/TColis">
+                                    <i class="la la-flag-o"></i>
+                                    <p>Type colis</p>
 
-							</a>
-						</li>
+                                </a>
+                            </li>
+                        @endif
 
 					</ul>
 				</div>

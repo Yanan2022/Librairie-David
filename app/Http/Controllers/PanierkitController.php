@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Panier;
+use App\Models\Panierkit;
 use Illuminate\Http\Request;
 use App\Models\Tb_articles;
 use App\Models\Tb_kit;
+use App\Models\Tb_kitscolaire;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 use Session;
@@ -15,29 +16,31 @@ class PanierkitController extends Controller
 {
     public function index(Request $request)
     {
-        $panier = $this->_getPanier($request);
+        $kitscolaires = Tb_kitscolaire::all();
+        return view("front.kit.index", compact('kitscolaires'));
+    }
 
-        return view("front.panier.panier", compact('panier'));
+    public function detail($kitscolaire)
+    {
+        $detailkitscolaires = Tb_articles::where('idkitscolaire', $kitscolaire)->get();
+        return view("front.kit.detail", compact('detailkitscolaires'));
+    }
+
+    public function panierkit(Request $request)
+    {
+        $panier = $this->_getPanier($request);
+        $produits =Tb_articles::whereIn('id',[3,4,5,6,7])->get();
+        return view("front.panier.panierkit", compact('panier','produits'));
     }
 
 
-    public function ajouterKit(Request $request, $idKit)
+    public function ajouterKit(Request $request, Tb_kitscolaire $kitscolaire)
     {
-        $articles = Tb_articles::where('idKit','=', $idKit)->get();
-        // $prixTotal = $panier->sum('PrixArticle');
-        // return view("front.kit.panier", compact('panier','prixTotal', 'idKit'));
+        $panier = $this->_getPanier($request);
 
+        $panier->addKit($kitscolaire, 1);
 
-        foreach($articles as $article){
-             $panier = $this->_getPanier($request);
-             $panier->addArticle($article, 1)->refresh();
-        }
-
-        return redirect()->route("panier.index");
-
-        // $panier = $this->_getPanier($request);
-        // return $panier->addKit($kit, 1)->refresh();
-        // Session::put('panier', $panier);
+        return redirect()->route("panier.panierkit");
     }
 
     public function create(Request $request, $id)
@@ -45,13 +48,6 @@ class PanierkitController extends Controller
         $article =  Tb_kit::find($id);
         $PrixKit =  $article->PrixKit;
         return view("front.kit.create", compact('id', 'PrixKit'));
-        // $panier = $this->_getPanier($request);
-
-        // if($panier->articles->isNotEmpty()) {
-        //     return view("commandes.create", compact('panier'));
-        // } else {
-        //     return redirect("/");
-        // }
     }
 
     public function store(Request $request)
@@ -65,46 +61,24 @@ class PanierkitController extends Controller
         $commande->ville = $request->get('ville');
         $commande->commune = $request->get('commune');
         $commande->quartier = $request->get('quartier');
-        //$commande->adresse = $request->get('adresse');
         $commande->save();
-
-        //return $commande;
-        // return "ok";
-        // $input = $request->validated();
-        // $panier = $this->_getPanier($request);
-        // if($panier->articles->isEmpty()) {
-        //     abort(401, "Requête invalide");
-        // }
-
-        // $commande = new Commande($input);
-        // $commande->uuid = $panier->uuid;
-        // $commande->save();
-
-        // foreach ($panier->articles as $article) {
-        //     $commande->articles()->attach($article->id, [
-        //         'quantite' => $article->pivot->quantite,
-        //         'prix_unitaire' => $article->pivot->prix_unitaire
-        //     ]);
-        // }
-
-        // $panier->delete();
 
         return view('commandes.merci');
     }
 
 
-    public function retirerArticle(Request $request, Tb_articles $article)
+    public function retirerKit(Request $request, Tb_kitscolaire $kitscolaire)
     {
         $panier = $this->_getPanier($request);
         $qte = intval($request->get("qte")) ?? 1;
 
-        $panier->removeArticle($article, $qte)->refresh();
+        $panier->removeKit($kitscolaire, $qte)->refresh();
 
-        return redirect()->route("panier.index");
+        return redirect()->route("panier.panierkit");
     }
 
 
-    public function vider(Request $request)
+    public function viderkit(Request $request)
     {
         $panier = $this->_getPanier($request);
 
@@ -119,7 +93,7 @@ class PanierkitController extends Controller
     {
         $uuid = $request->cookie('uuid', Str::uuid());
         Cookie::queue('uuid', $uuid, 30*24*60); // 30 jours (en minutes)
-        $panier = Panier::firstOrCreate([
+        $panier = Panierkit::firstOrCreate([
             'uuid' => $uuid,
             'etat' => 'actif',
         ]);

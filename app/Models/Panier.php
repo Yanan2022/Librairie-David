@@ -19,9 +19,11 @@ class Panier extends Model
         return $this->belongsToMany(Tb_articles::class, 'paniers_articles', 'panier_id', 'article_id')->withPivot('quantite', 'prix_unitaire');
     }
 
+
+
     public function kits()
     {
-        return $this->belongsToMany(Tb_kit::class, 'paniers_articles', 'panier_id', 'article_id')->withPivot('quantite', 'prix_unitaire');
+        return $this->belongsToMany(Tb_kitscolaire::class, 'paniers_kits', 'panier_id', 'kit_id')->withPivot('quantite', 'prix_unitaire');
     }
 
     public function getTotalAttribute()
@@ -29,6 +31,16 @@ class Panier extends Model
         $t = 0;
         foreach ($this->articles as $article) {
             $t += $article->pivot->quantite * $article->pivot->prix_unitaire;
+        }
+
+        return $t;
+    }
+
+    public function getTotal()
+    {
+        $t = 0;
+        foreach ($this->kits as $kitscolaire) {
+            $t += $kitscolaire->pivot->quantite * $kitscolaire->pivot->prix_unitaire;
         }
 
         return $t;
@@ -51,17 +63,17 @@ class Panier extends Model
         return $this;
     }
 
-    public function addKit(Tb_kit $kit, $quantite = 1)
+    public function addKit(Tb_kitscolaire $kitscolaire, $quantite = 1)
     {
-        if(!$this->kits->contains('id', $kit->id)) {
-            $this->kits()->attach($kit->id, [
+        if(!$this->kits->contains('id', $kitscolaire->id)) {
+            $this->kits()->attach($kitscolaire->id, [
                 'quantite' => $quantite,
-                'prix_unitaire' => (int) $kit->PrixKit,
+                'prix_unitaire' => (int) $kitscolaire->PrixKitscolaire,
             ]);
         } else {
-            $kit = $this->kits->where('id', $kit->id)->first();
-            $this->kits()->updateExistingPivot($kit->id, [
-                'quantite' => $kit->pivot->quantite + $quantite
+            $kitscolaire = $this->kits->where('id', $kitscolaire->id)->first();
+            $this->kits()->updateExistingPivot($kitscolaire->id, [
+                'quantite' => $kitscolaire->pivot->quantite + $quantite
             ]);
         }
 

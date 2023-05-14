@@ -9,9 +9,9 @@ class articleController extends Model
 {
     use HasFactory;
 
-   
+
     protected $fillable = [
-        'CodeArticle', 'LibelleArticle','PrixArticle','ImageArticle','StatutArticle','IdTypeArticle','id'
+        'CodeArticle', 'LibelleArticle','PrixArticle','ImageArticle','StatutArticle','IdTypeArticle','id','quantite'
      ];
 }
 

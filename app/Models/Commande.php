@@ -24,6 +24,8 @@ class Commande extends Model
         "etat",
         "type_vehicule_id",
         "user_id",
+        "total",
+        "code",
     ];
 
     protected $casts = [

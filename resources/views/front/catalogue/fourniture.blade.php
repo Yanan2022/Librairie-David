@@ -22,9 +22,9 @@
 
                         <h1 class="shop-title">
                             @if ( $id == 1)
-                                La liste des romans
+                                Fourniture scolaire
                             @elseif ($id == 2)
-                                La liste des cahiers
+                                La liste de cahiers
                             @elseif ($id == 3)
                                 La liste des matériels
                             @else
@@ -98,14 +98,14 @@
                             <ul class="list-category">
                                 @foreach ($categories as $categorie)
                                     <li class="category-item has-child-cate">
-                                        <a href="{{ route('catArts.show', $categorie) }}"
+                                        <a href="{{ route('detailCategories', $categorie) }}"
                                             class="cate-link">{{ $categorie->LibCategorieArt }}</a>
                                         @if ($categorie->sous_types->isNotEmpty())
-                                            <span class="toggle-control">+</span>
+                                            <span class="toggle-control">+</span> 
                                             <ul class="sub-cate">
                                                 @foreach ($categorie->sous_types as $sous_categorie)
                                                     <li class="category-item">
-                                                        <a href="{{ route('catArts.show', $sous_categorie) }}"
+                                                        <a href="{{ route('detailCategories', $sous_categorie) }}"
                                                             class="cate-link">{{ $sous_categorie->LibCategorieArt }}
                                                             ({{ $sous_categorie->articles->count() }})
                                                         </a>

@@ -30,7 +30,8 @@ class articles extends Controller
              //'EtatArticle' => 'required',
              'ImageArticle' => 'required',
              'StatutArticle' => 'required',
-             'IdTypeArticle' => 'required'
+             'IdTypeArticle' => 'required',
+             'quantite' => 'required'
          ]);
          $input = $request->all();
 
@@ -49,7 +50,13 @@ class articles extends Controller
              $input['lientelechargement'] = "$profileImage";
          }
          */
-        Tb_articles::create($input);
+        //return Tb_articles::create($input);
+
+        $article = new Tb_articles($input);
+        $article->quantite = $request->get('quantite');
+        $article->classe = $request->get('classe');
+        $article->idkitscolaire = $request->get('idkitscolaire');
+        $article->save();
          return redirect()->route('articles.index')
                          ->with('success','Création effectuée.');
      }
@@ -71,7 +78,9 @@ class articles extends Controller
             $image->move($destinationPath, $profileImage);
             $article->ImageArticle = "$profileImage";
         }
-
+        $article->classe = $request->get('classe');
+        $article->idkitscolaire = $request->get('idkitscolaire');
+        $article->quantite = $request->get('quantite');
         $article->update();
 
         return redirect()->route("articles.index");

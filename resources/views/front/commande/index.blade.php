@@ -28,7 +28,7 @@
                                 </p>
                             </div>
 
-                            <div class="price-field produtc-price">
+                            {{--<div class="price-field produtc-price">
                                 <p class="price">
                                     Telephone
                                 </p>
@@ -37,7 +37,7 @@
                                 <p class="price">
                                     Email
                                 </p>
-                            </div>
+                            </div> --}}
                             <div class="price-field produtc-price">
                                 <p class="price">
                                     Etat
@@ -61,12 +61,12 @@
                                         {{ $listeCommande->created_at->isoFormat('DD MMM Y, HH:mm') }}
                                     </a>
                                 </div>
-                                <div class="price-field produtc-price">
+                                {{-- <div class="price-field produtc-price">
                                     <p class="price">{{ $listeCommande->telephone }} </p>
                                 </div>
                                 <div class="price-field produtc-price">
                                     <p class="price">{{ $listeCommande->email }} </p>
-                                </div>
+                                </div> --}}
                                 <div class="price-field produtc-price">
                                     <p class="price">{{ $listeCommande->etat }} </p>
                                 </div>
@@ -80,6 +80,16 @@
                                         <a class="btn-submit" href="{{ route('detailCommande', $listeCommande->id) }}">
                                             voir détail
                                         </a>
+                                    </p>
+                                    @if ($listeCommande->etat == "Accepté" || $listeCommande->etat == "Soumis")
+                                        <p class="price">
+                                            <a class="btn-submit" href="{{ route('annulerCommande', $listeCommande->id) }}">
+                                                Annuler commande
+                                            </a>
+                                        </p>
+                                    @endif
+                                    <p class="price">
+                                        <a class="btn-submit" href="{{ route('voir_pdf',$listeCommande->id) }}">imprimer sa facture</a>
                                     </p>
                                 </div>
                             </li>

@@ -20,7 +20,10 @@
             <div class=" main-content-area">
 
                 <div class="wrap-iten-in-cart">
-                    <h3 class="box-title">Articles</h3>
+                    <h3 class="box-title">
+                        Articles
+                        <a href="{{ route('voir_pdf',$commande->id) }}">imprimer</a>
+                    </h3>
                     <ul class="products-cart">
                         @foreach ($commande->articles as $article)
                             <li class="pr-cart-item">

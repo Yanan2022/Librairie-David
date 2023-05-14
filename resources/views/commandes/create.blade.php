@@ -29,6 +29,7 @@
                         <input id="prenom" type="text" name="prenoms" value="{{ Session::get('client')->prenom }}" required class="hidden" />
                         <input id="nom" type="text" name="nom" value="{{ Session::get('client')->nom }}" required class="hidden" />
                         <input id="user_id" type="text" name="user_id" value="{{ Session::get('client')->id }}" required class="hidden" />
+                        <input id="total" type="text" name="total" value="{{ $panier->total }}" required class="hidden" />
 
                         <p class="row-in-form">
                             <label for="phone">Numéro de téléphone<span>*</span></label>
@@ -93,17 +94,19 @@
                                     class="grand-total-price">{{ $panier->total }} FCFA</span></p>
                             <button type="submit" class="btn btn-medium">Valider ma commande</button>
                         </div>
-                        <div class="summary-item shipping-method">
-                            <h4 class="title-box f-title">Livraison</h4>
-                            <p class="summary-info"><span class="title">Coût fixe</span></p>
-                            <p class="summary-info"><span class="title">Frais 0.0 FCFA</span></p>
-                            <h4 class="title-box">Code Promo</h4>
-                            <p class="row-in-form">
-                                <label for="coupon-code">Entrez votre code promo :</label>
-                                <input id="coupon-code" type="text" name="coupon-code" value="" placeholder="Facultatif">
-                            </p>
-                            <a href="#" class="btn btn-small">Appliquer</a>
-                        </div>
+                        <form>
+                            <div class="summary-item shipping-method">
+                                <h4 class="title-box f-title">Livraison</h4>
+                                <p class="summary-info"><span class="title">Coût fixe</span></p>
+                                <p class="summary-info"><span class="title">Frais 0.0 FCFA</span></p>
+                                <h4 class="title-box">Code Promo</h4>
+                                <p class="row-in-form">
+                                    <label for="coupon-code">Entrez votre code promo :</label>
+                                    <input id="coupon-code" type="text" name="coupon-code" value="" placeholder="Facultatif">
+                                </p>
+                                <a href="#" class="btn btn-small">Appliquer</a>
+                            </div>
+                        </form>
                     </div>
 
                 </form>

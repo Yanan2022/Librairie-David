@@ -11,6 +11,7 @@
                     <table id="example" class="display" style="width:100%">
                         <thead>
                             <tr>
+                                <th>Numéro commande</th>
                                 <th>Nom &amp; Prénom client</th>
                                 <th>Téléphone</th>
                                 <th>E-mail</th>
@@ -26,6 +27,7 @@
                         <tbody>
                             @foreach ($commandes as $commande)
                                 <tr>
+                                    <td>{{ $commande->code }}</td>
                                     <td>{{ "{$commande->nom} {$commande->prenoms}" }}</td>
                                     <td>{{ $commande->telephone }}</td>
                                     <td>{{ $commande->email }}</td>

@@ -87,12 +87,11 @@
                                             <td>{{ $item->nomclient }}</td>
                                             <td>{{ $item->prenomclient }}</td>
                                             <td>{{ $item->contactclient }}</td>
-                                            <td>{{ $item->long }}</td>
-                                            <td>{{ $item->lat }}</td>
-                                            <td>{{ $item->long_Arrive }}</td>
-                                            <td>{{ $item->lat_Arrive }}</td>
-                                            <td>{{ $item->description_colis }}</td>
-                                            <td>{{ $item->coutLivraison }}</td>
+                                            <td>{{ $item->ville }}</td>
+                                            <td>{{ $item->commune }}</td>
+                                            <td>{{ $item->quartier }}</td>
+                                            <td>{{ $item->etat }}</td>
+                                            <td>{{ $item->user_id }}</td>
 
                                             <td>
                                                 <a href="{{ route('livs.edit', $item->id) }}" class="btn btn-warning"><i
