@@ -29,9 +29,6 @@
                                 <a href="{{ route('classes.edit', $item->id) }}" class="btn btn-warning">
                                     <i class="la la-edit"></i>
                                 </a>
-                                <button class="btn btn-info">
-                                    <i class="la la-search-plus"></i>
-                                </button>
                                 <button class="btn btn-danger delete-row" data-uri="{{ route('classes.destroy', $item->id) }}">
                                     <i class="la la-trash"></i>
                                 </button>
@@ -53,7 +50,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
-                    <h6 class="modal-title"><i class="la la-folder-open"></i> Ajout d'un article</h6>
+                    <h6 class="modal-title"><i class="la la-folder-open"></i> Ajout d'une classe</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

@@ -4,7 +4,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Liste des kits scolaires</h4>
+            <h4 class="card-title">Liste des vendeurs</h4>
             <div class="navbar-nav topbar-nav ml-md-auto align-items-center">
                 <a class="btn btn-success" href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter"><i
                         class="la la-folder-open"></i></a>
@@ -15,37 +15,31 @@
             <table id="example" class="display" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Code</th>
-                        <th>Désignation</th>
-                        <th>Prix</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Contact</th>
                         <th>Aperçu</th>
-                        <th>Statut</th>
-                        <th>Type article</th>
-                        <th>Quantité</th>
+                        <th>Email</th>
                         <th>Bouton action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($kitscolaire as $item)
+                    @foreach ($livreurs as $item)
                         <tr>
-                            <td>{{ $item->CodeKitscolaire }}</td>
-                            <td>{{ $item->LibelleKitscolaire }}</td>
-                            <td>{{ $item->PrixKitscolaire }}</td>
-                            <td><img src='images/{{ $item->ImageKitscolaire }}' style="height:30px;widght:30px;"></td>
-                            <td>{{ $item->StatutKitscolaire }}</td>
-                            <td>{{ $item->IdTypeKitscolaire}}</td>
-                            <td>{{ $item->quantite}}</td>
                             <td>
-                                <a href="{{ route('kitscolaires.edit', $item->id) }}" class="btn btn-warning"><i
-                                        class="la la-edit"></i>
-                                </a>
-                                <a  href="{{ route('kitscolaires.show', $item->id) }}" class="btn btn-info">
-                                    <i class="la la-search-plus"></i>
-                                </a>
+                                {{ $item->nom }}
+                            </td>
+                            <td>{{ $item->prenom }}</td>
+                            <td>{{ $item->contact }}</td>
+                            <td><img src='images/{{ $item->photo }}' style="height:30px;widght:30px;"></td>
+                            <td>{{ $item->email }}</td>
+                            <td>
+                                <a href="{{ route('vendeurs.edit', $item->id) }}" class="btn btn-warning"><i
+                                        class="la la-edit"></i></a>
+                                <button class="btn btn-info"><i class="la la-search-plus"></i></button>
                                 <button class="btn btn-danger delete-row"
-                                    data-uri="{{ route('kitscolaires.destroy', $item->id) }}"><i
-                                        class="la la-trash">
-                                    </i>
+                                    data-uri="{{ route('vendeurs.destroy', $item->id) }}">
+                                    <i class="la la-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -65,60 +59,40 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-success">
-                    <h6 class="modal-title"><i class="la la-folder-open"></i> Ajouter un nouveau kit scolaire</h6>
+                    <h6 class="modal-title"><i class="la la-folder-open"></i> Ajouter un nouveau vendeur</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
                 <div class="modal-body">
-                    <form role="form" action="{{ route('kitscolaires.store') }}" method="POST" enctype="multipart/form-data">
+                    <form role="form" action="{{ route('livreurs.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="CodeKit">Code</label>
-                            <input type="text" class="form-control form-control" id="CodeKitscolaire" name="CodeKitscolaire"
-                                placeholder="Code Kit">
+                            <label for="CodeArticle">Nom</label>
+                            <input type="text" class="form-control form-control" id="CodeArticle" name="nom"
+                                placeholder="Nom">
                         </div>
                         <div class="form-group">
-                            <label for="LibelleKit">Libellé</label>
-                            <input type="text" class="form-control form-control" id="LibelleKitscolaire" name="LibelleKitscolaire"
-                                placeholder="Libellé kit">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="PrixKit">Prix</label>
-                            <input type="text" class="form-control form-control" id="PrixKitscolaire" name="PrixKitscolaire"
-                                placeholder="Prix Kit">
+                            <label for="LibelleArticle">Prénom</label>
+                            <input type="text" class="form-control form-control" id="LibelleArticle" name="prenom"
+                                placeholder="Prénom">
                         </div>
 
                         <div class="form-group">
-                            <label for="quantite">Quantité</label>
-                            <input type="text" class="form-control form-control" id="quantite" name="quantite"
-                                placeholder="Quantité">
+                            <label for="PrixArticle">Contact</label>
+                            <input type="text" class="form-control form-control" id="PrixArticle" name="contact"
+                                placeholder="Contact">
                         </div>
-
                         <div class="form-group">
-                            <label for="ImageKit">Image</label>
-                            <input type="file" class="form-control form-control" id="ImageKitscolaire" name="ImageKitscolaire"
-                                placeholder="Image kit scolaire">
+                            <label for="PrixArticle">Email</label>
+                            <input type="email" class="form-control form-control" id="email" name="email"
+                                placeholder="Contact">
                         </div>
-
                         <div class="form-group">
-                            <label for="StatutKit">En stock</label>
-                            <select class="form-control form-select" name="StatutKitscolaire" id="v">
-                                <option value="En stock">En stock</option>
-                                <option value="Approvisionnement en cours">Approvisionnement en cours</option>
-                                <option value="Stock épuisé">Stock épuisé</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="IdTypeKit">Type</label>
-                            <select class="form-control form-select" name="IdTypeKitscolaire" id="IdTypeKit">
-                                @foreach (App\Models\typearticleModel::all() as $type)
-                                    <option value="{{ $type->id }}">{{ $type->LibCategorieArt }}</option>
-                                @endforeach
-                            </select>
+                            <label for="ImageArticle">Photo Livreur</label>
+                            <input type="file" class="form-control form-control" id="photo" name="photo"
+                                placeholder="Photo livreur">
                         </div>
 
                         <div>

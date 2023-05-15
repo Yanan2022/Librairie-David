@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Coupon;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+
 
 class couponController extends Controller
 {
@@ -14,20 +12,11 @@ class couponController extends Controller
     {
       $this->middleware('auth');
     }
-    //
     public function index()
     {
         $coupons = Coupon::all();
         return view('coupon.index', compact('coupons'));
     }
-
-    public function show(Codepromo $article)
-    {
-        //return $article;
-        return view("front.article.detail", compact('article'));
-    }
-
-     //Enregistrement d'un article
      public function store(Request $request)
      {
          $request->validate([
@@ -37,7 +26,6 @@ class couponController extends Controller
              'date_fin' => 'required',
          ]);
          $input = $request->all();
-
          $coupon = new Coupon($input);
          $coupon->date_debut = $request->get('date_debut');
          $coupon->date_fin = $request->get('date_fin');
@@ -49,28 +37,24 @@ class couponController extends Controller
 
      public function edit($id)
      {
-        $livreur =  User::find($id);
-         return view("codepromo.edit", compact('livreur'));
+        $coupon =  Coupon::find($id);
+         return view("coupon.edit", compact('coupon'));
      }
 
 
-     public function update(Request $request, Codepromo $livreur)
+     public function update(Request $request, Coupon $coupon)
      {
-         $livreur->fill($request->all());
-
-
-        $livreur->update();
-
-        return redirect()->route("livreurs.index");
+        $coupon->fill($request->all());
+        $coupon->update();
+        return redirect()->route("coupons.index");
      }
 
 
      public function destroy(Coupon $coupon)
      {
-         $livreur->delete();
-
+         $coupon->delete();
          return response()->json([
-             "message" => "Article supprimé !",
+             "message" => "coupon supprimé !",
          ]);
      }
 }

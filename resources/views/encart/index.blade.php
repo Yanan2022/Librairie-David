@@ -30,10 +30,6 @@
                             <td>
                                 <a href="{{ route('encarts.edit', $item->id) }}" class="btn btn-warning"><i
                                         class="la la-edit"></i></a>
-                                <button class="btn btn-info">
-                                    <i class="la la-search-plus">
-                                    </i>
-                                </button>
                                 <button class="btn btn-danger delete-row"
                                     data-uri="{{ route('encarts.destroy', $item->id) }}"><i
                                         class="la la-trash"></i></button>

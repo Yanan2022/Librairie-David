@@ -23,7 +23,7 @@
                                     <h3 style="margin-left: 8%" style="text-align: center;"><strong> Scanner votre liste de fourniture !</strong></h3>
                                         <form action="{{ route('upload') }}" method="POST" enctype="multipart/form-data" class="form-inline">
                                             @csrf
-                                            <div class="container">
+                                            <div class="container"> 
                                                <div class="row">
                                                 <div class="input-group mb-2 mr-sm-2">
                                                     <input type="file" name="image" class="form-control mb-2 mr-sm-2">
@@ -38,7 +38,7 @@
                                                   </select>
                                                 </div>
                                                 <div class="input-group mb-2 mr-sm-2">
-                                                    <button type="submit" class="btn btn-primary mb-2">Valider</button>
+                                                    <button id="laoding" type="submit" class="btn btn-primary mb-2">Valider</button>
                                                 </div>
                                                </div>
                                             </div>
@@ -262,7 +262,7 @@
                             @foreach ($produits as $item )
                                 <div class="product product-style-2 equal-elem ">
                                     <div class="product-thumnail">
-                                        <a href="#" title="T-Shirt Raw Hem Organic Boro Constrast Denim">
+                                        <a title="T-Shirt Raw Hem Organic Boro Constrast Denim">
                                             <figure>
                                                 <img src="/images/{{ $item->ImageArticle }}" width="214" height="214" alt="T-Shirt Raw Hem Organic Boro Constrast Denim">
                                             </figure>
@@ -301,4 +301,18 @@
 
     </main>
     <!--main area-->
+
+    <script>
+        var laoding = document.getElementById("laoding");
+
+        laoding.addEventListener("click", function() {
+            laoding.classList.add("loading");
+
+        // Effectuez votre traitement ici, par exemple une requête AJAX
+
+        // Une fois le traitement terminé, supprimez la classe "loading"
+        laoding.classList.remove("loading");
+        });
+
+    </script>
 @endsection

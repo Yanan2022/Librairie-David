@@ -45,8 +45,6 @@
                                                 class="btn btn-success valider-commande"><i class="la la-check"
                                                     title="Valider"></i></button>
                                         @endif
-                                        <button class="btn btn-danger" title="Supprimer"><i
-                                                class="la la-trash"></i></button>
                                     </td>
                                 </tr>
                             @endforeach

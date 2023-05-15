@@ -33,6 +33,7 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\codepromoController;
 use App\Http\Controllers\commentaireController;
 use App\Http\Controllers\couponController;
+use App\Http\Controllers\VendeurController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +93,7 @@ Route::post('/get-results', [HomeController::class, 'typeaheadSearch'])->name('g
 //Route::get('/get-results', 'HomeController@typeaheadSearch')->name('get-results');
 Route::post('/upload', [HomeController::class, 'upload'])->name('upload');
 Route::get('/listeCommande', [SuivicommandeController::class, 'listeCommande'])->name('listeCommande');
+Route::get('/historiqueCommande', [SuivicommandeController::class, 'historiqueCommande'])->name('historiqueCommande');
 Route::get('/annulerCommande/{id}', [SuivicommandeController::class, 'annulerCommande'])->name('annulerCommande');
 Route::post('/storeCommentaire', [SuivicommandeController::class, 'storeCommentaire'])->name('storeCommentaire');
 Route::get('/createCommentaire', [SuivicommandeController::class, 'createCommentaire'])->name('createCommentaire');
@@ -120,6 +122,8 @@ Route::resource('articles', articles::class);
 Route::resource('commentaires', commentaireController::class);
 Route::resource('coupons', couponController::class);
 Route::resource('codepromos', couponController::class);
+//la liste des vendeurs
+Route::resource('vendeurs', VendeurController::class);
 Route::resource('livreurs', livreurController::class);
 Route::resource('bannieres', banniereController::class);
 Route::resource('encarts', encartController::class);

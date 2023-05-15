@@ -12,7 +12,8 @@ use App\Models\typearticleModel;
 use App\Models\EntrepriseModel;
 use App\Models\Commande;
 use APP\Models\LivraisonModel;
-
+use App\Models\Classe;
+use Carbon\Carbon;
 
 class dashbordController extends Controller
 {
@@ -35,9 +36,11 @@ class dashbordController extends Controller
     {
         $articles = Tb_articles::all();
         $categories = typearticleModel::all();
-        $commandes = Commande::all();
-        $liv = DB::table('livraison_models')->get();
-        return view('dashboard', compact('articles', 'categories', 'commandes','liv'));
+        // $commandes = Commande::all();
+        $commandes = Commande::whereDate('created_at', Carbon::today())->get();
+        $classe = Classe::all();
+        $orders = Commande::whereDate('created_at', Carbon::today())->get();
+        return view('dashboard', compact('articles', 'categories', 'commandes','orders','classe'));
     }
 
     public function upload(Request $request)

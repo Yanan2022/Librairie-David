@@ -10,18 +10,18 @@
                 @csrf
                 @method("patch")
                 <div class="form-group">
-                    <label for="CodeKitscolaire">Code Kit</label>
+                    <label for="CodeKitscolaire">Code</label>
                     <input type="text" class="form-control form-control" id="CodeKitscolaire" name="CodeKitscolaire"
                         placeholder="Code kit" value="{{ old('CodeKitscolaire', $kitscolaire->CodeKitscolaire) }}">
                 </div>
                 <div class="form-group">
-                    <label for="LibelleKitscolaire">Libellé Kit</label>
+                    <label for="LibelleKitscolaire">Libellé</label>
                     <input type="text" class="form-control form-control" id="LibelleKitscolaire" name="LibelleKitscolaire"
                         placeholder="Libellé article" value="{{ old('LibelleKitscolaire', $kitscolaire->LibelleKitscolaire) }}">
                 </div>
 
                 <div class="form-group">
-                    <label for="PrixKitscolaire">Prix Kit</label>
+                    <label for="PrixKitscolaire">Prix</label>
                     <input type="text" class="form-control form-control" id="PrixKit" name="PrixKitscolaire"
                         placeholder="Prix kit" value="{{ old('PrixKitscolaire', $kitscolaire->PrixKitscolaire) }}">
                 </div>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="ImageKitscolaire">Image kit</label>
+                    <label for="ImageKitscolaire">Image</label>
                     <input type="file" class="form-control form-control" id="ImageKitscolaire" name="ImageKitscolaire"
                         placeholder="Image kit">
                 </div>
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="IdTypeKitscolaire">Type article</label>
+                    <label for="IdTypeKitscolaire">Type</label>
                     <select class="form-control form-select" name="IdTypeKitscolaire" id="IdTypeKitscolaire">
                         @foreach (App\Models\typearticleModel::all() as $type)
                             <option value="{{ $type->id }}" @if (old('IdTypeKitscolaire', $kitscolaire->IdTypeKitscolaire) == $type->id) selected @endif>
@@ -58,7 +58,7 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="Entreprise">Entreprise</label>
                     <select class="form-control form-select" name="entreprise_id" id="Entreprise">
                         @foreach (App\Models\EntrepriseModel::all() as $ent)
@@ -66,7 +66,7 @@
                                 {{ $ent->LibelleEntreprise }}</option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
 
                 <div>
                     <a href="{{ url()->previous() }}" class="btn btn-wating" data-dismiss="modal">Fermer</a>

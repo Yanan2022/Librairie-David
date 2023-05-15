@@ -14,13 +14,6 @@ class encartController extends Controller
         return view('encart.index', ['encarts' => DB::table('encarts')->get()]);
     }
 
-    public function show(Tb_articles $article)
-    {
-        //return $article;
-        return view("front.article.detail", compact('article'));
-    }
-
-     //Enregistrement d'un article
      public function store(Request $request)
      {
          $request->validate([
@@ -35,14 +28,7 @@ class encartController extends Controller
              $image->move($destinationPath, $profileImage);
              $input['image'] = "$profileImage";
          }
-          /*
-         if ($image = $request->file('lientelechargement')) {
-             $destinationPath = 'docs/';
-             $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-             $image->move($destinationPath, $profileImage);
-             $input['lientelechargement'] = "$profileImage";
-         }
-         */
+         
         Encart::create($input);
          return redirect()->route('encarts.index')
                          ->with('success','Création effectuée.');

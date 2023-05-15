@@ -38,8 +38,8 @@
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
-				<a href="#" class="logo">
-					Librairie Tableau de bord
+				<a href="/admin" class="logo">
+					<img src="{{asset('logo.png')}}" alt="logo" style="width: 50%">
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -48,121 +48,37 @@
 			</div>
 			<nav class="navbar navbar-header navbar-expand-lg">
 				<div class="container-fluid">
-
-					<form class="navbar-left navbar-form nav-search mr-md-3" action="">
-						<div class="input-group">
-							<input type="text" placeholder="Search ..." class="form-control">
-							<div class="input-group-append">
-								<span class="input-group-text">
-									<i class="la la-search search-icon"></i>
-								</span>
-							</div>
-						</div>
-					</form>
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-						<li class="nav-item dropdown hidden-caret">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="la la-envelope"></i>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Action</a>
-								<a class="dropdown-item" href="#">Another action</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Something else here</a>
-							</div>
-						</li>
 						<li class="nav-item dropdown hidden-caret">
 							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="la la-bell"></i>
 								<span class="notification">3</span>
 							</a>
-							<ul class="dropdown-menu notif-box" aria-labelledby="navbarDropdown">
-								<li>
-									<div class="dropdown-title">You have 4 new notification</div>
-								</li>
-								<li>
-									<div class="notif-center">
-										<a href="#">
-											<div class="notif-icon notif-primary"> <i class="la la-user-plus"></i> </div>
-											<div class="notif-content">
-												<span class="block">
-													New user registered
-												</span>
-												<span class="time">5 minutes ago</span>
-											</div>
-										</a>
-										<a href="#">
-											<div class="notif-icon notif-success"> <i class="la la-comment"></i> </div>
-											<div class="notif-content">
-												<span class="block">
-													Rahmad commented on Admin
-												</span>
-												<span class="time">12 minutes ago</span>
-											</div>
-										</a>
-										<a href="#">
-											<div class="notif-img">
-												<img src="assets/img/profile2.jpg" alt="Img Profile">
-											</div>
-											<div class="notif-content">
-												<span class="block">
-													Reza send messages to you
-												</span>
-												<span class="time">12 minutes ago</span>
-											</div>
-										</a>
-										<a href="#">
-											<div class="notif-icon notif-danger"> <i class="la la-heart"></i> </div>
-											<div class="notif-content">
-												<span class="block">
-													Farrah liked Admin
-												</span>
-												<span class="time">17 minutes ago</span>
-											</div>
-										</a>
-									</div>
-								</li>
-								<li>
-									<a class="see-all" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="la la-angle-right"></i> </a>
-								</li>
-							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="fontend/assets/img/profile.jpg" alt="user-img" width="36" class="img-circle">
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> 
+								<img src="fontend/assets/img/profile.jpg" alt="user-img" width="36" class="img-circle">
                                 <span >{{Auth::user()['nom'].' '.Auth::user()['prenom']}}</span></span>
                             </a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="fontend/assets/img/profile.jpg" alt="user"></div>
 										<div class="u-text">
 											<h4>{{Auth::user()['nom'].' '.Auth::user()['prenom']}}</h4>
 											<p class="text-muted">
                                                 {{Auth::user()['email']}}
-                                            </p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
 										</div>
 									</li>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="ti-user"></i> My Profile</a>
-									<a class="dropdown-item" href="#"></i> My Balance</a>
-									<a class="dropdown-item" href="#"><i class="ti-email"></i> Inbox</a>
-									<div class="dropdown-divider"></div>
 									<div class="dropdown-divider">
-
                                     </div>
-									{{-- <a class="dropdown-item" href="{{ route('logout') }}"><i class="fa fa-power-off"></i> Logout</a> --}}
-
                                         <a class="dropdown-item" href="{{ route('logout') }}"
-                                           onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                                            Logout
+                                           onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                            Deconnexion
                                         </a>
-
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                             @csrf
                                         </form>
-
-								</ul>
+							</ul>
 								<!-- /.dropdown-user -->
 							</li>
 						</ul>
@@ -173,7 +89,9 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-                            <img src="{{ asset('images/'.Auth::user()->photo) }}" class="img-circle user-img-circle" alt="photo">
+                            {{-- <img src="{{ asset('images/'.Auth::user()->photo) }}" class="img-circle user-img-circle" alt="photo"> --}}
+							{{-- <img src="fontend/assets/img/profile.jpg" alt="user-img" width="100" class="img-circle"> --}}
+							<img src="fontend/assets/img/profile.jpg"   alt="photo">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
@@ -182,7 +100,7 @@
                                     @if (Auth::User()['role_id'] == 0)
 									    <span class="user-level">Administrateur</span>
                                     @elseif (Auth::User()['role_id'] == 1)
-                                        <span class="user-level">Livreur</span>
+                                        <span class="user-level">Vendeur</span>
                                     @endif
 									<span class="caret"></span>
 								</span>
@@ -213,20 +131,26 @@
 					<ul class="nav">
                         @if(Auth::user()['role_id'] == 0 || Auth::user()['role_id'] == 1)
                             <li class="nav-item active">
-                                <a href="/">
+                                <a href="/admin">
                                     <i class="la la-dashboard"></i>
                                     <p>Accueil</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="/liv">
-                                    <i class="la la-automobile"></i>
-                                    <p>Livraison</p>
-
+							<li class="nav-item">
+                                <a href="{{ route("commandes.index") }}">
+                                    <i class="la la-road"></i>
+                                    <p>Suivi des commandes</p>
                                 </a>
-                            </li>
+                            </li> 
                         @endif
                         @if(Auth::user()['role_id'] == 0)
+							<li class="nav-item">
+								<a href="{{ route('classes.index') }}">
+									<i class="la la-folder-o"></i>
+									<p>Classes</p>
+
+								</a>
+							</li>
                             <li class="nav-item">
                                 <a href="/catArt">
                                     <i class="la la-folder-o"></i>
@@ -247,36 +171,16 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('kits.index')}}">
-                                    <i class="la la-keyboard-o"></i>
-                                    <p>Kits</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{route('accueil')}}">
-                                    <i class="la la-keyboard-o"></i>
-                                    <p>Libraire David</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/cout">
-                                    <i class="la la-money"></i>
-                                    <p>Cout</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{route('livreurs.index')}}">
-                                    <i class="la la-money"></i>
-                                    <p>Livreur</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="{{route('coupons.index')}}">
                                     <i class="la la-money"></i>
                                     <p>Code Promo</p>
+                                </a>
+                            </li>
+							<li class="nav-item">
+                                <a href="{{route('vendeurs.index')}}">
+                                    <i class="la la-money"></i>
+                                    <p>Vendeur</p>
+
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -286,85 +190,16 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route("commandes.index") }}">
-                                    <i class="la la-road"></i>
-                                    <p>Suivi des commandes</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/listeEnt">
-                                    <i class="la la-building"></i>
-                                    <p>Liste Entreprises/Boutiques</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/entreprise">
-                                    <i class="la la-building"></i>
-                                    <p>Entreprises/Boutiques</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/categorie">
-                                    <i class="la la-folder-o"></i>
-                                    <p>Categorie entreprise</p>
-
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('classes.index') }}">
-                                    <i class="la la-folder-o"></i>
-                                    <p>Classes</p>
-
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
                                 <a href="{{ route('encarts.index') }}">
                                     <i class="la la-folder-o"></i>
                                     <p>Encart publicitaire</p>
-
                                 </a>
                             </li>
 
-                            <li class="nav-item">
-                                <a href="{{ route('bannieres.index') }}">
-                                    <i class="la la-folder-o"></i>
-                                    <p>Bannière</p>
-
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="/pays">
-                                    <i class="la la-flag-o"></i>
-                                    <p>Pays</p>
-
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="/Tvehicule">
-                                    <i class="la la-flag-o"></i>
-                                    <p>Type Vehicule</p>
-
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/vehicule">
-                                    <i class="la la-flag-o"></i>
-                                    <p>Véhicule</p>
-
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="/TColis">
-                                    <i class="la la-flag-o"></i>
-                                    <p>Type colis</p>
+							<li class="nav-item">
+                                <a href="{{route('vendeurs.index')}}">
+                                    <i class="la la-money"></i>
+                                    <p>Vendeur</p>
 
                                 </a>
                             </li>

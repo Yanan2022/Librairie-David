@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commande;
-use App\Models\EntrepriseModel;
 use App\Models\Panier;
 use App\Http\Requests\StoreCommandeRequest;
 use App\Http\Requests\UpdateCommandeRequest;
@@ -12,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 use Session;
 use App\Models\Commentaire;
+use Carbon\Carbon;
 
 class SuivicommandeController extends Controller
 {
@@ -27,9 +27,23 @@ class SuivicommandeController extends Controller
 
     public function listeCommande()
     {
-        # code...
-        $listeCommandes = Commande::where('user_id','=',Session::get('client')['id'])->get();
-        return view('front.commande.index', compact('listeCommandes'));
+        
+        $userId = Session::get('client')['id'];
+        $listeCommandes = Commande::where('user_id', '=', $userId)
+                    ->whereDate('created_at', Carbon::today())
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        return view('front.commande.index', ['listeCommandes' => $listeCommandes]);
+    }
+
+    public function historiqueCommande()
+    {
+        $userId = Session::get('client')['id'];
+        $listeCommandes = Commande::where('user_id', '=', $userId)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+        return view('front.commande.index', ['listeCommandes' => $listeCommandes]);
     }
 
     public function detailCommande(Commande $commande)

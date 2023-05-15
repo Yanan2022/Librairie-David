@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="wrap-icon right-section">
-                        <div class="wrap-icon-section wishlist">
+                        {{-- <div class="wrap-icon-section wishlist">
                             <a href="#" class="link-direction">
                                 <i class="fa fa-heart" aria-hidden="true"></i>
                                 <div class="left-info">
@@ -35,7 +35,7 @@
                                     <span class="title" style="text-color: white">Wishlist</span>
                                 </div>
                             </a>
-                        </div>
+                        </div> --}}
                         <div class="wrap-icon-section minicart">
                             <a href="{{ route('listeCommande') }}" class="link-direction">
                                 <i class="fa fa-shopping-basket" aria-hidden="true"></i>
@@ -63,11 +63,18 @@
                                 <a href="{{ url('/') }}" class="link-term mercado-item-title">
                                     <i class="fa fa-home" aria-hidden="true"></i></a>
                             </li>
-                           
-
+                            <li class="menu-item">
+                                <a href="{{ url('/') }}" class="link-term mercado-item-title">Accueil</a>
+                            </li>
                             @if (Session::has('client'))
                                 <li class="menu-item">
                                     <a href="{{ route('listeCommande') }}" class="link-term mercado-item-title">Suivi commande</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ route('historiqueCommande') }}" class="link-term mercado-item-title">Historique commande</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{route('kits.index')}}" class="link-term mercado-item-title">kit scolaire</a>
                                 </li>
                                 <li class="menu-item">
                                     <a href="{{route('logout-client')}}" class="link-term mercado-item-title">

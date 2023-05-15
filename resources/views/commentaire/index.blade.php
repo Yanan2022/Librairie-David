@@ -13,7 +13,6 @@
                     <tr>
                         <th>Code</th>
                         <th>Motif</th>
-                        <th>Bouton action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,11 +20,6 @@
                         <tr>
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->description }}</td>
-                            <td>
-                                <button class="btn btn-info">
-                                    <i class="la la-search-plus"></i>
-                                </button>
-                            </td>
                         </tr>
                     @endforeach
 
