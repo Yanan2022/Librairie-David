@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    
     <!--main area-->
     <main id="main" class="main-site left-sidebar">
         <div class="container">
@@ -38,7 +39,12 @@
                                                   </select>
                                                 </div>
                                                 <div class="input-group mb-2 mr-sm-2">
-                                                    <button id="laoding" type="submit" class="btn btn-primary mb-2">Valider</button>
+                                                    <button class="save-btn">Save change</button>
+                                                    {{-- <button id="monBouton" class="btn btn-primary" type="submit" onclick="showLoading()">
+                                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                                        <span class="sr-only">Chargement...</span>
+                                                        En cours de chargement
+                                                    </button>                                                                                                          --}}
                                                 </div>
                                                </div>
                                             </div>
@@ -303,16 +309,10 @@
     <!--main area-->
 
     <script>
-        var laoding = document.getElementById("laoding");
+        save_btn = document.querySelector(".save-btn")
 
-        laoding.addEventListener("click", function() {
-            laoding.classList.add("loading");
-
-        // Effectuez votre traitement ici, par exemple une requête AJAX
-
-        // Une fois le traitement terminé, supprimez la classe "loading"
-        laoding.classList.remove("loading");
-        });
-
+        save_btn.onclick = function(){
+            this.innerHTML = "<div class='loader'></div>";
+        }
     </script>
 @endsection

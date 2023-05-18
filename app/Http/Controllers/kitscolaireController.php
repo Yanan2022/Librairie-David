@@ -15,7 +15,7 @@ class kitscolaireController extends Controller
     }
     public function index()
     {
-        return view('kitscolaire.index', ['kitscolaire' => DB::table('Tb_kitscolaires')->get()]);
+        return view('kitscolaire.index', ['kitscolaire' => DB::table('tb_kitscolaires')->get()]);
     }
 
     public function show($id)

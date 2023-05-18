@@ -40,7 +40,7 @@ class PdfController extends Controller
 
     public function convert_orders_data_to_html(){
 
-        $orders = Commande::where('id',Session::get('id'))->get();
+        return $orders = Commande::where('id',Session::get('id'))->get();
         foreach($orders as $order){
             $name = $order->nom;
             $prenom = $order->prenoms;
@@ -91,7 +91,7 @@ class PdfController extends Controller
                                 foreach($order->articles as $item){
 
                                     $output .= '<tr">
-                                                    <td><img src="images/'.$item->ImageArticle.'" alt="" style = "height: 80px; width: 80px;"></td>
+                                                    <td><img src="'.asset('images/'.$item->ImageArticle).'" alt="" style = "height: 80px; width: 80px;"></td>
                                                     <td class="product-name">
                                                         <h3>'.$item['LibelleArticle'].'</h3>
                                                     </td>

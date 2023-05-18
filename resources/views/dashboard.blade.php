@@ -23,7 +23,7 @@
             <div class="card bg-success">
                 <div class="card-body">
                    <h1 class="float-left"><i class="la la-folder-o"></i></h1>
-                    <h1 class="float-right">1{{count($classe)}}</h1>
+                    <h1 class="float-right">{{count($classe)}}</h1>
                 </div>
                 <div class="card-footer">
                     <h4>Classes <a class="btn btn-outline-dark btn-sm float-right" href="{{route('classes.index')}}">Voir+</a></h4>

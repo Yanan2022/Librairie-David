@@ -25,9 +25,13 @@
     <link rel="stylesheet" type="text/css" href="assets/css/chosen.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="assets/css/color-01.css">
+
+    <link rel="stylesheet" href="assets/css/loading.css">
+    
 </head>
 
 <body class="home-page home-01 ">
+    
 
     <!-- mobile menu -->
     @include('front.partials.menu')

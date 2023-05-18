@@ -157,35 +157,35 @@ class CommandeController extends Controller
     public function choisirLivreur(Request $request, Commande $commande)
     {
 
+        return view("commandes.delivery-set",['commande' => $commande,]);
 
-        if(!empty($request->type_vehicule_id)) {
-            $livreur_id = $request->type_vehicule_id;
-            $livraison = User::find($livreur_id);
-            $livreur = new LivraisonModel();
-            $livreur->nomclient = $commande->nom;
-            $livreur->prenomclient = $commande->prenoms;
-            $livreur->contactclient = $commande->telephone;
-            $livreur->ville = $commande->ville;
-            $livreur->commune = $commande->commune;
-            $livreur->quartier = $commande->quartier;
-            $livreur->etat = $commande->etat;
-            $livreur->commande_id = $commande->id;
-            $livreur->commande_montant = $commande->total;
-            $livreur->user_id = $request->type_vehicule_id;
-            $livreur->nomlivreur = $livraison->nom;
-            $livreur->prenomlivreur = $livraison->prenom;
-            $livreur->contactlivreur = $livraison->contact;
-            $livreur->save();
-            //$commande->update(["type_vehicule_id" => $request->type_vehicule_id]);
+        
+        // if(!empty($request->type_vehicule_id)) {
+        //     $livreur_id = $request->type_vehicule_id;
+        //     $livraison = User::find($livreur_id);
+        //     $livreur = new LivraisonModel();
+        //     $livreur->nomclient = $commande->nom;
+        //     $livreur->prenomclient = $commande->prenoms;
+        //     $livreur->contactclient = $commande->telephone;
+        //     $livreur->ville = $commande->ville;
+        //     $livreur->commune = $commande->commune;
+        //     $livreur->quartier = $commande->quartier;
+        //     $livreur->etat = $commande->etat;
+        //     $livreur->commande_id = $commande->id;
+        //     $livreur->commande_montant = $commande->total;
+        //     $livreur->user_id = $request->type_vehicule_id;
+        //     $livreur->nomlivreur = $livraison->nom;
+        //     $livreur->prenomlivreur = $livraison->prenom;
+        //     $livreur->contactlivreur = $livraison->contact;
+        //     $livreur->save();
+        //     return view("commandes.delivery-set", [
+        //         'type_vehicule' => \App\Models\typevehiculeModel::find($request->type_vehicule_id),
+        //         'commande' => $commande,
+        //     ]);
+        // }
 
-            return view("commandes.delivery-set", [
-                'type_vehicule' => \App\Models\typevehiculeModel::find($request->type_vehicule_id),
-                'commande' => $commande,
-            ]);
-        }
-
-        $types_vehicules = \App\Models\User::all();
-        return view("commandes.mode-livraison", compact('commande', 'types_vehicules'));
+        // $types_vehicules = \App\Models\User::all();
+        // return view("commandes.mode-livraison", compact('commande', 'types_vehicules'));
     }
 
 

@@ -1,4 +1,4 @@
-@extends("layouts")
+@extends("front.layouts.app")
 
 @section('title')
     Commande #{{ $commande->id }}
@@ -69,19 +69,19 @@
                         <label for="lname">Nom</label>
                         <input id="lname" type="text" name="nom" value="{{ $commande->nom }}" disabled />
                     </p>
-                    <p class="row-in-form">
+                    {{-- <p class="row-in-form">
                         <label for="email">Adresse E-mail:</label>
                         <input id="email" type="email" name="email" value="{{ $commande->email }}" disabled>
-                    </p>
+                    </p> --}}
                     <p class="row-in-form">
                         <label for="phone">Numéro de téléphone</label>
                         <input id="phone" type="text" name="telephone" value="{{ $commande->telephone }}"
                             placeholder="Au format 10 chiffres" disabled>
                     </p>
-                    <p class="row-in-form">
+                    {{-- <p class="row-in-form">
                         <label for="add">Adresse</label>
                         <input id="add" type="text" name="adresse" value="{{ $commande->adresse }}" disabled />
-                    </p>
+                    </p> --}}
                     <p class="row-in-form">
                         <label for="city">Ville</label>
                         <input id="city" type="text" name="ville" value="{{ $commande->ville }}" disabled>
@@ -102,7 +102,7 @@
                         <p class="summary-info"><span class="title">Sous-total</span><b
                                 class="index">{{ $commande->total }} FCFA</b></p>
                         <p class="summary-info"><span class="title">Livraison</span><b
-                                class="index">Livraison gratuite</b></p>
+                                class="index">Librairie David</b></p>
                         <p class="summary-info total-info "><span class="title">Total</span><b
                                 class="index">{{ $commande->total }} FCFA</b></p>
                     </div>
