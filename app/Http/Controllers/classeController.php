@@ -39,15 +39,13 @@ class classeController extends Controller
      }
 
 
-     public function update(Request $request, Classe $classe)
+     public function update(Request $request, $classe)
      {
-    
-        $classe->fill($request->all());
-
-        // return $classe;
-
+        $classe =  Classe::find($classe);
+        $classe->libelle = $request->get('libelle');
         $classe->update();
 
+        // return redirect()->route("classes.index");
         return redirect()->route("classes.index");
      }
 

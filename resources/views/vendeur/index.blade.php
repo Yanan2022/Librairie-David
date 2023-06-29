@@ -27,7 +27,7 @@
                     @foreach ($livreurs as $item)
                         <tr>
                             <td>
-                                {{ $item->nom }}
+                                {{ $item->nom }} 
                             </td>
                             <td>{{ $item->prenom }}</td>
                             <td>{{ $item->contact }}</td>

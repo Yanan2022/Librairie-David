@@ -40,10 +40,11 @@
 
                 <div class="form-group">
                     <label for="classe">Classe</label>
-                    <select class="form-control form-select" name="classe" id="classe">
-                        <option value="cp1">CP1</option>
-                        <option value="cp2">CP2</option>
-                        <option value="ce1">CE1</option>
+                    <select class="form-control form-select" name="IdTypeArticle" id="IdTypeArticle">
+                        @foreach (App\Models\Classe::all() as $type)
+                            <option value="{{ $type->libelle }}" @if (old('IdTypeArticle', $article->IdTypeArticle) == $type->id) selected @endif>
+                                {{ $type->libelle }}</option>
+                        @endforeach
                     </select>
                 </div>
 

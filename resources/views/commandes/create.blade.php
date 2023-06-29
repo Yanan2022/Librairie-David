@@ -53,6 +53,11 @@
                             <label for="zip-code">Quartier</label>
                             <input id="zip-code" type="text" name="quartier" value="{{ old('quartier') }}" />
                         </p>
+
+                        @if (request()->session()->has('coupon'))
+                            <input type="hidden" name="coupon_code" value="{{ request()->session()->get('coupon')['code'] }}">
+                            <input type="hidden" name="coupon_remise" value="{{ request()->session()->get('coupon')['remise'] }}">
+                        @endif
                     </div>
                     <div class="summary summary-checkout">
                         <div class="summary-item payment-method">
@@ -85,15 +90,19 @@
                         </div>
                         <form>
                             <div class="summary-item shipping-method">
-                                <h4 class="title-box f-title">Librairie David</h4>
-                                {{-- <p class="summary-info"><span class="title">Coût fixe</span></p>
-                                <p class="summary-info"><span class="title">Frais 0.0 FCFA</span></p>
-                                <h4 class="title-box">Code Promo</h4>
+                                <h4 class="title-box f-title">Code Promo</h4>
                                 <p class="row-in-form">
-                                    <label for="coupon-code">Entrez votre code promo :</label>
-                                    <input id="coupon-code" type="text" name="coupon-code" value="" placeholder="Facultatif">
+                                <label for="coupon-code">Promo :
+                                    <strong>
+                                        @if (request()->session()->has('coupon'))
+                                            {{ $panier->total - request()->session()->get('coupon')['remise'] }} FCFA
+                                        @else
+                                            Pas de coupon
+                                        @endif
+                                    </strong>
+                                </label>
+
                                 </p>
-                                <a href="#" class="btn btn-small">Appliquer</a> --}}
                             </div>
                         </form>
                     </div>

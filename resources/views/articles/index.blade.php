@@ -34,8 +34,24 @@
                             <td>{{ $item->LibelleArticle }}</td>
                             <td>{{ $item->PrixArticle }}</td>
                             <td><img src='images/{{ $item->ImageArticle }}' style="height:30px;widght:30px;"></td>
-                            <td>{{ $item->StatutArticle }}</td>
-                            <td>{{ $item->IdTypeArticle }}</td>
+                            <td>
+                                @if($item->StatutArticle == 1)
+                                   En stock
+                                @elseif($item->StatutArticle == 2)
+                                   Approvissionnement en cours
+                                @else
+                                  Stock épuisé
+                                @endif
+                            </td>
+                            <td>
+                                @if($item->IdTypeArticle == 1)
+                                   Manuel
+                                @elseif($item->IdTypeArticle == 2)
+                                   Cahier
+                                @else
+                                  Materiel
+                                @endif
+                            </td>
                             <td>{{ $item->classe }}</td>
                             <td>
                                 <a href="{{ route('articles.edit', $item->id) }}" class="btn btn-warning"><i

@@ -1,4 +1,4 @@
-<header id="header" class="header header-style-1" style="background-image: url('{{asset('catalogue/banniere/background-noel.jpg')}}');">
+<header id="header" class="header header-style-1">
     <div class="container-fluid">
         <div class="row">
             <div class="topbar-menu-area">
@@ -19,13 +19,12 @@
                     <div class="wrap-search center-section">
                         <div class="wrap-search-form">
                             <form action="{{ route('search') }}" id="form-search-top" name="form-search-top">
-                                <input type="text" id="autocomplete" name="search" value="" placeholder="Rechercher">
-                                <button form="form-search-top" type="button"><i class="fa fa-search"
-                                        aria-hidden="true"></i>
-                                </button>
+                                <input type="text" id="autocomplete" name="search" value="" placeholder="Rechercher" autocomplete="off">
+                                <button form="form-search-top" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </form>
                         </div>
                     </div>
+
                     <div class="wrap-icon right-section">
                         {{-- <div class="wrap-icon-section wishlist">
                             <a href="#" class="link-direction">

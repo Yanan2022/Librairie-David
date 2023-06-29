@@ -26,12 +26,6 @@
 
                         <div class="wrap-right">
                             <div class="change-display-mode">
-                                {{--<a href="{{ route('cp1')}}" class="grid-mode display-mode active">
-                                    <i class="fa fa-th"></i>Grille</a>
-                                <a href="list.html" class="list-mode display-mode">
-                                    <i class="fa fa-th-list"></i>
-                                    Liste
-                                </a> --}}
                         </div>
 
                         </div>
@@ -52,7 +46,7 @@
                                                 <figure>
                                                     <img src="/images/{{ $article->ImageArticle }}"
                                                         alt="{{ $article->LibelleArticle }}">
-                                                    </figure>
+                                                </figure>
                                             </a>
                                         </div>
                                         <div class="product-info">
@@ -72,14 +66,10 @@
 
                     </div>
                     <div class="wrap-pagination-info">
-                        <ul class="page-numbers">
-                            <li><span class="page-number-item current">{{-- $articles->links() --}}</span></li>
-                            {{--<li><a class="page-number-item" href="#">2</a></li>
-                            <li><a class="page-number-item" href="#">3</a></li>
-                            <li><a class="page-number-item next-link" href="#">Next</a></li> --}}
-                        </ul>
-                        {{--<p class="result-count">Showing 1-8 of 12 result</p> --}}
+                        {{ $articles->links() }}
+                        <p class="result-count">Affichage {{ $articles->firstItem() }}-{{ $articles->lastItem() }} sur {{ $articles->total() }} résultats</p> 
                     </div>
+
                 </div>
                 <!--end main products area-->
 
@@ -144,12 +134,27 @@
                     <div class="widget mercado-widget filter-widget">
                         <h2 class="widget-title">Classe</h2>
                         <div class="widget-content">
-                            <ul class="list-style vertical-list has-count-index">
+                        <ul class="list-style vertical-list has-count-index">
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('ps')}}">
+                                        PETITE SECTION (PS)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('ms')}}">
+                                        MOYENNE SECTION (MS)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('gs')}}">
+                                        GRANDE SECTION (GS)
+                                    </a>
+                                </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('cp1')}}">
                                         CP1
                                     </a>
-                                    </li>
+                                </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('cp2')}}">
                                         CP2
@@ -177,36 +182,36 @@
                                 </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('sixieme')}}">
-                                        6ième
+                                        Sixième(6ième)
                                     </a>
                                 </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('cinquieme')}}">
-                                        5ième
+                                        Cinquième(5ième)
                                     </a>
                                 </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('quatrieme')}}">
-                                        4ième
+                                        Quatrième(4ième)
                                     </a>
                                 </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('troisieme')}}">
-                                        3ième
+                                        Troisième(3ième)
                                     </a>
                                 </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('seconde')}}">
-                                        2nd
+                                        Second (2nd)
                                     </a>
                                 </li>
                                 <li class="list-item"><a class="filter-link " href="{{ route('premiere')}}">
-                                        1ère
+                                        Prémière (1ère)
                                     </a>
                                 </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('terminal')}}">
-                                        Tle
+                                        Terminale(Tle)
                                     </a>
                                 </li>
                             </ul>

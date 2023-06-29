@@ -86,16 +86,17 @@ class livraisonController extends Controller
 
     public function commandeEmporte($id)
     {
+         
         # code...
-        $livraison = LivraisonModel::find($id);
-        $livraison->etat = "Emporté";
-        $livraison->update();
+        // return $livraison = LivraisonModel::find($id);
+        // $livraison->etat = "Emporté";
+        // $livraison->update();
 
-        $commande = $livraison->commande_id;
-        $commande = Commande::find($commande);
+        // $commande = $livraison->commande_id;
+        $commande = Commande::find($id);
         $commande->etat = "Emporté";
         $commande->update();
-        return redirect()->route("livs.index");
+        return redirect()->route("commandes.index");
     }
 
     public function commandeLivre($id)

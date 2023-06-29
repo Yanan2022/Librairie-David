@@ -39,11 +39,29 @@
                                     <td>{{ $commande->created_at->isoFormat('DD MMM Y, HH:mm') }}</td>
                                     <td>
                                         <a href="{{ route('commandes.show', $commande) }}" class="btn btn-info"
-                                            title="Voir la commande"><i class="la la-search-plus"></i></a>
+                                            title="Voir la commande"><i class="la la-search-plus"></i>
+                                        </a>
+                                        <a href="{{ route('commandes.edit', $commande) }}" class="btn btn-warning">
+                                            <i class="la la-edit"></i>
+                                        </a>
                                         @if ($commande->etat == 'Soumis')
                                             <button data-commande='@json($commande)'
                                                 class="btn btn-success valider-commande"><i class="la la-check"
                                                     title="Valider"></i></button>
+                                        @endif
+                                        @if ($commande->etat == 'Accepté')
+                                            <a href="{{ route('commandes.annuler', $commande->id) }}" class="btn btn-danger">
+                                                <i class="la la-check" title="Annuler"></i>
+                                            </a>
+                                        @endif
+                                        @if ($commande->etat == "Accepté")
+                                        <a href="{{ route('commande-emportee', $commande->id) }}" class="btn btn-success valider-commande">
+                                            Emporté
+                                        </a>
+                                        @elseif ($commande->etat == "Emporté")
+                                        <a href="{{ route('commande-livree', $commande->id) }}" class="btn btn-success valider-commande">
+                                            Livré
+                                        </a>
                                         @endif
                                     </td>
                                 </tr>

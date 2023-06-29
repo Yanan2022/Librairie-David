@@ -81,12 +81,9 @@
                     </div>
                     <div class="wrap-pagination-info">
                         <ul class="page-numbers">
-                            <li><span class="page-number-item current">{{-- $articles->links() --}}</span></li>
-                            {{--<li><a class="page-number-item" href="#">2</a></li>
-                            <li><a class="page-number-item" href="#">3</a></li>
-                            <li><a class="page-number-item next-link" href="#">Next</a></li> --}}
+                            {{ $articles->links() }}
                         </ul>
-                        {{--<p class="result-count">Showing 1-8 of 12 result</p> --}}
+                        <p class="result-count">Affichage {{ $articles->firstItem() }}-{{ $articles->lastItem() }} sur {{ $articles->total() }} résultats</p>
                     </div>
                 </div>
                 <!--end main products area-->
@@ -152,24 +149,88 @@
                     <div class="widget mercado-widget filter-widget">
                         <h2 class="widget-title">Classe</h2>
                         <div class="widget-content">
-                            <ul class="list-style vertical-list has-count-index">
+                        <ul class="list-style vertical-list has-count-index">
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('ps')}}">
+                                        PETITE SECTION (PS)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('ms')}}">
+                                        MOYENNE SECTION (MS)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('gs')}}">
+                                        GRANDE SECTION (GS)
+                                    </a>
+                                </li>
                                 <li class="list-item">
                                     <a class="filter-link " href="{{ route('cp1')}}">
                                         CP1
-                                        <span>(217)</span></a>
-                                    </li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('cp2')}}">
-                                    CP2
-                                        <span>(179)</span></a></li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('ce1')}}">CE1
-                                        <span>(79)</span></a></li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('ce2')}}">CE2
-                                        <span>(283)</span></a></li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('cm1')}}">CM1
-                                        <span>(116)</span></a></li>
-                                <li class="list-item"><a class="filter-link " href="{{ route('cm2')}}">CM2
-                                        <span>(29)</span></a></li>
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('cp2')}}">
+                                        CP2
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('ce1')}}">
+                                        CE1
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('ce2')}}">
+                                        CE2
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('cm1')}}">
+                                        CM1
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('cm2')}}">
+                                        CM2
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('sixieme')}}">
+                                        Sixième(6ième)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('cinquieme')}}">
+                                        Cinquième(5ième)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('quatrieme')}}">
+                                        Quatrième(4ième)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('troisieme')}}">
+                                        Troisième(3ième)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('seconde')}}">
+                                        Second (2nd)
+                                    </a>
+                                </li>
+                                <li class="list-item"><a class="filter-link " href="{{ route('premiere')}}">
+                                        Prémière (1ère)
+                                    </a>
+                                </li>
+                                <li class="list-item">
+                                    <a class="filter-link " href="{{ route('terminal')}}">
+                                        Terminale(Tle)
+                                    </a>
+                                </li>
                             </ul>
+                        </div>
                         </div>
                     </div><!-- Color -->
 

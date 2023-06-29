@@ -42,21 +42,17 @@ class articles extends Controller
              $image->move($destinationPath, $profileImage);
              $input['ImageArticle'] = "$profileImage";
          }
-          /*
-         if ($image = $request->file('lientelechargement')) {
-             $destinationPath = 'docs/';
-             $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
-             $image->move($destinationPath, $profileImage);
-             $input['lientelechargement'] = "$profileImage";
-         }
-         */
-        //return Tb_articles::create($input);
+         
 
         $article = new Tb_articles($input);
         $article->quantite = $request->get('quantite');
-        $article->classe = $request->get('classe');
+        // $article->classe = $request->get('classe');
         $article->idkitscolaire = $request->get('idkitscolaire');
-        $article->save();
+        $article->save(); 
+
+        $classesSelected = $request->input('classe');
+        $article->classes()->attach($classesSelected);
+
          return redirect()->route('articles.index')
                          ->with('success','Création effectuée.');
      }

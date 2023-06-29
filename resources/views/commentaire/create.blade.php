@@ -29,7 +29,7 @@
 
 
                         <div class="form-group">
-                            <textarea style="width: 200%; heigth:200%" class="form-control form-control-textarea" id="description_colis" name="description">{{ old('description') }}
+                            <textarea style="width: 200%; heigth:200%" class="form-control form-control-textarea" id="description_colis" name="description">
                             </textarea>
                         </div>
 

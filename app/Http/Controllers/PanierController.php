@@ -80,8 +80,7 @@ class PanierController extends Controller
             'code'=>$coupon->code,
             'remise'=>$coupon->discount($total),
         ]);
-
-
+        
         return redirect()->route('panier.index')->with('status', 'le coupon est valide');
     }
 

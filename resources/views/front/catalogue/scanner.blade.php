@@ -16,16 +16,11 @@
             </div>
             <div class="row">
                 <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12 main-content-area">
-
                     <!--end wrap shop control-->
-
                     <div class="wrap-shop-control">
-
                         <h1 class="shop-title">La liste des articles disponibles</h1>
                     </div>
-
                     <div class=" main-content-area">
-
                         <div class="wrap-iten-in-cart">
                             <ul class="products-cart">
                                 @foreach ($panier->articles as $article)
@@ -135,63 +130,11 @@
                             </div>
                             <div class="update-clear">
                                 <a class="btn btn-clear" href="{{ route("panier.vider") }}">Vider mon panier</a>
-                                <a class="btn btn-update" href="{{ url()->current() }}">Actualiser mon panier</a>
                             </div>
                         </div>
-
-                        <div class="wrap-show-advance-info-box style-1 box-in-site">
-                            <h3 class="title-box">Les produits les plus vus</h3>
-                            <div class="wrap-products">
-                                <div class="products slide-carousel owl-carousel style-nav-1 equal-container" data-items="5"
-                                    data-loop="false" data-nav="true" data-dots="false"
-                                    data-responsive='{"0":{"items":"1"},"480":{"items":"2"},"768":{"items":"3"},"992":{"items":"3"},"1200":{"items":"5"}}'>
-
-                                    @foreach ($produits as $item )
-                                    <div class="product product-style-2 equal-elem ">
-                                        <div class="product-thumnail">
-                                            <a href="#" title="T-Shirt Raw Hem Organic Boro Constrast Denim">
-                                                <figure>
-                                                    <img src="/images/{{ $item->ImageArticle }}" width="214" height="214" alt="T-Shirt Raw Hem Organic Boro Constrast Denim">
-                                                </figure>
-                                            </a>
-                                            <div class="group-flash">
-                                                <span class="flash-item new-label">Nouveaux</span>
-                                            </div>
-                                            <div class="wrap-btn">
-                                                <a href="{{ route('articles.show', $item->id) }}" class="function-link">Vue</a>
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <a href="{{ route('panier.ajouter-article', $item->id) }}" class="product-name">
-                                                <span>
-                                                    {{ $item->LibelleArticle }}
-                                                </span>
-                                            </a>
-                                            <div class="wrap-price">
-                                                <span class="product-price">{{ $item->PrixArticle }} FCFA</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                </div>
-                            </div>
-                            <!--End wrap-products-->
-                        </div>
-
                     </div>
-
-                    {{--<div class="wrap-pagination-info">
-                        <ul class="page-numbers">
-                            <li><span class="page-number-item current">1</span></li>
-                            <li><a class="page-number-item" href="#">2</a></li>
-                            <li><a class="page-number-item" href="#">3</a></li>
-                            <li><a class="page-number-item next-link" href="#">Suivant</a></li>
-                        </ul>
-                        <p class="result-count">Montrer 1-8 of 12 résultat</p>
-                    </div> --}}
                 </div>
                 <!--end main products area-->
-
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12 sitebar">
                     <div class="widget mercado-widget categories-widget">
                         <h2 class="widget-title">La liste de fournitures scannées </h2>
@@ -200,56 +143,22 @@
                                 @foreach ($pieces as $piece)
                                     <li class="category-item has-child-cate">
                                         <a class="cate-link">{{ $piece }}</a>
-                                        {{--@if ($categorie->sous_types->isNotEmpty()) --}}
-
                                             <ul class="sub-cate">
-                                               {{-- @foreach ($categorie->sous_types as $sous_categorie) --}}
                                                     <li class="category-item">
                                                         {{ $piece }}
-                                                       {{-- <a href="{{ route('catArts.show', $sous_categorie) }}"
-                                                            class="cate-link">{{ $sous_categorie->LibCategorieArt }}
-                                                            ({{  $sous_categorie->articles->count() }})
-                                                        </a> --}}
                                                     </li>
-                                                {{--@endforeach --}}
                                             </ul>
-                                        {{--@endif --}}
                                     </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div><!-- Categories widget-->
-
-                    <!-- Price-->
-
-                    {{--<div class="widget mercado-widget filter-widget">
-                        <h2 class="widget-title">La liste de fourniture scanner</h2>
-                        <div class="widget-content">
-                            <ul class="list-style vertical-list has-count-index">
-                                @foreach ($pieces as $pieces )
-                                    <li class="list-item">
-                                        <a class="filter-link " href="{{ route('cp1')}}">
-                                            {{$piece}}
-                                            <span>(217)</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div> --}}
-                    <!-- Color -->
-                    <!-- brand widget-->
-
                 </div>
                 <!--end sitebar-->
             </div>
             <!--end row-->
-
         </div>
-
         <!--end container-->
-
-
     </main>
     <!--main area-->
 @endsection

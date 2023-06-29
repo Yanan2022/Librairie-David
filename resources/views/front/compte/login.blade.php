@@ -4,7 +4,7 @@
     Connexion
 @endsection
 
-@section("content")
+@section("content")  
 <main id="main" class="main-site left-sidebar">
 
     <div class="container">

@@ -34,6 +34,9 @@ use App\Http\Controllers\codepromoController;
 use App\Http\Controllers\commentaireController;
 use App\Http\Controllers\couponController;
 use App\Http\Controllers\VendeurController;
+use App\Http\Controllers\commentairevendeurController;
+use App\Http\Controllers\kitecoleController;
+use App\Http\Controllers\EcoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +56,11 @@ Route::get('/admin', [dashbordController::class, 'index']);
 Route::get('/article', [articles::class, 'index']);
 
 //Route::get('/articles', [articleController::class,'store']);
+
+//Historique des commandes
+Route::get('/historique-vendeur', [VendeurController::class, 'historique_vendeur'])->name('historique-vendeur');
+Route::get('/commande-emportee/{id}', [VendeurController::class, 'commande_emportee'])->name('commande-emportee');
+Route::get('/commande-livree', [VendeurController::class, 'commande_livree'])->name('commande-livree');
 
 Route::get('/categorie', [catEntrepriseController::class, 'index']);
 
@@ -100,7 +108,11 @@ Route::get('/createCommentaire', [SuivicommandeController::class, 'createComment
 Route::get('/detailCommande/{commande}', [SuivicommandeController::class, 'detailCommande'])->name('detailCommande');
 Route::get('/voir_pdf/{id}', [PdfController::class, 'voir_pdf'])->name('voir_pdf');
 Route::get('/pdfs', [PdfController::class, 'index'])->name('index');
+Route::resource('ecoles', EcoleController::class);
 
+Route::get('/ps', [HomeController::class, 'ps'])->name('ps');
+Route::get('/ms', [HomeController::class, 'ms'])->name('ms');
+Route::get('/gs', [HomeController::class, 'gs'])->name('gs');
 Route::get('/cp1', [HomeController::class, 'cp1'])->name('cp1');
 Route::get('/cp2', [HomeController::class, 'cp2'])->name('cp2');
 Route::get('/ce1', [HomeController::class, 'ce1'])->name('ce1');
@@ -116,10 +128,13 @@ Route::get('/1ere', [HomeController::class, 'premiere'])->name('premiere');
 Route::get('/tle', [HomeController::class, 'terminal'])->name('terminal');
 
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+// Ajoutez cette route dans votre fichier de routes web.php
+Route::get('/autocomplete', 'HomeController@autocomplete')->name('autocomplete');
 
 
 Route::resource('articles', articles::class);
 Route::resource('commentaires', commentaireController::class);
+Route::resource('commentairevendeurs', commentairevendeurController::class);
 Route::resource('coupons', couponController::class);
 Route::resource('codepromos', couponController::class);
 //la liste des vendeurs
@@ -130,6 +145,7 @@ Route::resource('encarts', encartController::class);
 Route::resource('classes', classeController::class);
 Route::resource('kits', kitController::class);
 Route::resource('kitscolaires', kitscolaireController::class); //les kits scolaires
+Route::resource('kitecoles', kitecoleController::class); //les kits école
 Route::resource('categories', catEntrepriseController::class);
 Route::resource('entreprises', entrepriseController::class);
 Route::resource('catArts', typearticleController::class);
@@ -142,6 +158,7 @@ Route::resource('cat', catalogueController::class);
 Route::resource('commandes', CommandeController::class);
 Route::post("/commandes/{commande}/validate", [CommandeController::class, 'valider'])->name("commandes.validate");
 Route::match(['get', 'post'], "/commandes/{commande}/delivery-mode", [CommandeController::class, 'choisirLivreur'])->name("commandes.choose-delivery-mode");
+Route::get("/commandes-annuler/{id}", [CommandeController::class, 'annuler'])->name("commandes.annuler");
 
 Route::get('article/{article}/ajouter-au-panier', [PanierController::class, 'ajouterArticle'])->name("panier.ajouter-article");
 

@@ -21,4 +21,9 @@ class Tb_articles extends Model
     {
         return $this->belongsTo(EntrepriseModel::class);
     }
+
+    public function classes()
+    {
+        return $this->belongsToMany(Classe::class);
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commande;
+use App\Models\LivraisonModel;
 use Illuminate\Http\Request;
 use App\Models\Tb_articles;
 use App\Models\User;
@@ -18,6 +20,30 @@ class VendeurController extends Controller
     public function index()
     {
         return view('vendeur.index', ['livreurs' => DB::table('users')->get()]);
+    }
+
+    public function historique_vendeur()
+    {
+        $livraisons = LivraisonModel::all();
+        return view('historiquevente.index', compact('livraisons'));
+    }
+
+    public function commande_emportee($id)
+    {
+      
+        return $commande = Commande::find($id);
+        $commande->etat = "Emporté";
+        $commande->update();
+        return redirect()->route("commandes.index");
+    }
+
+    public function commande_ivree($id)
+    {
+
+        $commande = Commande::find($id);
+        $commande->etat = "Livré";
+        $commande->update();
+        return redirect()->route("commandes.index");
     }
 
     public function show(Tb_articles $article)

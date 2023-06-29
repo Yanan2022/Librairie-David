@@ -101,10 +101,20 @@
                         <h4 class="title-box">Résumé</h4>
                         <p class="summary-info"><span class="title">Sous-total</span><b
                                 class="index">{{ $commande->total }} FCFA</b></p>
-                        <p class="summary-info"><span class="title">Livraison</span><b
-                                class="index">Librairie David</b></p>
-                        <p class="summary-info total-info "><span class="title">Total</span><b
-                                class="index">{{ $commande->total }} FCFA</b></p>
+                        <p class="summary-info"><span class="title">Livraison</span>
+                            <b class="index">Librairie David</b>
+                        </p>
+                        @if (request()->session()->has('coupon'))
+                        <p class="summary-info total-info "><span class="title">Total</span>
+                           <b class="index">{{ $commande->total - request()->session()->get('coupon')['remise'] }} FCFA</b>
+                        </p>
+                        @else
+                        <p class="summary-info total-info "><span class="title">Total</span>
+                           <b class="index">{{ $commande->total }} FCFA</b>
+                        </p>
+                        @endif
+                        
+                               
                     </div>
                     @if ($commande->etat == 'Soumis')
                         <div class="checkout-info">

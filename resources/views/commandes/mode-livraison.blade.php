@@ -1,7 +1,7 @@
 @extends("layouts")
 @section('title')
     Nouvelle commande
-@endsection
+@endsection 
 @section('content')
     <!--main area-->
     <main id="main" class="main-site">

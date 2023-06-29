@@ -27,6 +27,12 @@
     <link rel="stylesheet" type="text/css" href="assets/css/color-01.css">
 
     <link rel="stylesheet" href="assets/css/loading.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Inclure jQuery UI Autocomplete -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     
 </head>
 
@@ -57,22 +63,30 @@
     @yield('scripts')
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js">
-     var route = "{{ url('get-results') }}";
-        $('#autocomplete').typeahead({
-            source: function (query, process) {
-                return $.get(route, {
-                    query: query,
-                    classNames: {
-                        input: 'Typeahead-input',
-                        hint: 'Typeahead-hint',
-                        selectable: 'Typeahead-selectable'
-                    }
-                }, function (d) {
-                    console.log(d)
-                    return process(d);
-                });
-            }
+     <script>
+        // Utilisez une bibliothèque JavaScript d'autocomplétion comme jQuery UI Autocomplete ou une autre de votre choix
+
+        // Exemple avec jQuery UI Autocomplete
+        $(function() {
+            $('#autocomplete').autocomplete({
+                source: function(request, response) {
+                    // Effectuez une requête AJAX pour récupérer les suggestions d'autocomplétion
+                    $.ajax({
+                        url: '/autocomplete', // Remplacez cette URL par celle de votre route de recherche d'autocomplétion
+                        dataType: 'json',
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2 // Définissez la longueur minimale pour déclencher l'autocomplétion
+            });
         });
+    </script>
+
 </body>
 
 </html>

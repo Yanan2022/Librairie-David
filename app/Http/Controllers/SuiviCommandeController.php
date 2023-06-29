@@ -28,13 +28,17 @@ class SuivicommandeController extends Controller
     public function listeCommande()
     {
         
-        $userId = Session::get('client')['id'];
-        $listeCommandes = Commande::where('user_id', '=', $userId)
-                    ->whereDate('created_at', Carbon::today())
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-
-        return view('front.commande.index', ['listeCommandes' => $listeCommandes]);
+        if (empty(Session::get('client')['nom'])) {
+            # code...
+            return redirect('login-client');
+        }else {
+            $userId = Session::get('client')['id'];
+            $listeCommandes = Commande::where('user_id', '=', $userId) 
+                        ->whereDate('created_at', Carbon::today())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+            return view('front.commande.index', ['listeCommandes' => $listeCommandes]);
+        }
     }
 
     public function historiqueCommande()

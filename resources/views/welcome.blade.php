@@ -139,7 +139,19 @@
 							<li class="nav-item">
                                 <a href="{{ route("commandes.index") }}">
                                     <i class="la la-road"></i>
-                                    <p>Suivi des commandes</p>
+                                    <p>Suivi Commandes</p>
+                                </a>
+                            </li> 
+							<li class="nav-item">
+                                <a href="{{ route("historique-vendeur") }}">
+                                    <i class="la la-road"></i>
+                                    <p>Historique Vente</p>
+                                </a>
+                            </li> 
+							<li class="nav-item">
+                                <a href="{{ route("commentairevendeurs.index") }}">
+                                    <i class="la la-road"></i>
+                                    <p>Commentaire Vendeur</p>
                                 </a>
                             </li> 
                         @endif
@@ -174,6 +186,13 @@
                                 <a href="{{route('coupons.index')}}">
                                     <i class="la la-money"></i>
                                     <p>Code Promo</p>
+                                </a>
+                            </li>
+							<li class="nav-item">
+                                <a href="{{route('kitecoles.index')}}">
+                                    <i class="la la-money"></i>
+                                    <p>Ecoles</p>
+
                                 </a>
                             </li>
 							<li class="nav-item">

@@ -80,6 +80,7 @@ class CommandeController extends Controller
 
         $commande = new Commande($input);
         $commande->uuid = $panier->uuid;
+        $commande->uuid = $panier->uuid;
         $commande->save();
         //return $commande;
         event(new CommandeCreatedEvent($commande));
@@ -115,7 +116,7 @@ class CommandeController extends Controller
      */
     public function edit(Commande $commande)
     {
-        //
+        return view("commandes.edit", compact('commande'));
     }
 
     /**
@@ -156,7 +157,7 @@ class CommandeController extends Controller
 
     public function choisirLivreur(Request $request, Commande $commande)
     {
-
+        $livreur_id = $request->type_vehicule_id;;
         return view("commandes.delivery-set",['commande' => $commande,]);
 
         
@@ -199,5 +200,14 @@ class CommandeController extends Controller
         ]);
 
         return $panier;
+    }
+
+    public function annuler($id)
+    {
+        $commande = Commande::find($id);
+        $commande->etat = "Annulé";
+        $commande->update();
+        return redirect()->route("commandes.index");
+        # code...
     }
 }

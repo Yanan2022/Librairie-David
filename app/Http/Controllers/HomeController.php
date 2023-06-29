@@ -16,6 +16,11 @@ use Session;
 use App\Models\Panier;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
+use PhpParser\Node\Stmt\Return_;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+
 
 class HomeController extends Controller
 {
@@ -117,48 +122,62 @@ class HomeController extends Controller
         if (empty(Session::get('client')['nom'])) {
             return redirect('login-client');
         }else {
-        $request->validate([
-            "image"=>"required|mimes:png,jpg,jpeg|max:10000"
-        ]);
-        $classe = $request->get('classe');
-        $classe =  Tb_articles::where('classe','=', $classe);
+            $request->validate([
+                "image"=>"required|mimes:png,jpg,jpeg|max:10000"
+            ]);
+            $articles = Tb_articles::whereIn('LibelleArticle', ['cahier', 'stylo', 'gomme'])->get();
+            $classe = $request->get('classe');
+            $articles = Tb_articles::where('classe', '=', $classe)->get();
+
             if ($image = $request->file('image')) {
                 $destinationPath = 'images/';
                 $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
                 $fileNameTostore = $image->move($destinationPath, $profileImage);
                 $input['ImageArticle'] = "$profileImage";
             }
+
             $tesseractOcr = new TesseractOCR($fileNameTostore);
             $text = $tesseractOcr->run();
-            $pieces = array();
             $pieces = preg_split("/[\\r\\t\\n]+/i", $text);
 
-            //fonction de recherche pour la reconnaissance avec le ocr
             $resultat = collect();
-            for ($i=0; $i < count($pieces)  ; $i++) {
-                # code...
-                $query = $classe;
-                $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
-                $piece = str_replace($reservedSymbols, '', $pieces);
-                $piece = implode('+',$piece);
-                $resultat = $resultat->concat($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
-                        ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
-                        ->orderByDesc('relevance_score')->get());
+
+            foreach ($pieces as $piece) {
+                $query = Tb_articles::where('classe', '=', $classe)
+                    ->select('*')
+                    ->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
+                    ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
+                    ->orderByDesc('relevance_score')
+                    ->get();
+
+                $resultat = $resultat->concat($query);
             }
 
             $articles = $resultat->unique('id');
 
             foreach ($articles as $article) {
-                # code...
                 $panier = $this->_getPanier($request);
                 $panier->addArticle($article, 1)->refresh();
             }
 
             $panier = $this->_getPanier($request);
-            $produits =Tb_articles::whereIn('id',[3,4,5,6,7])->get();
-            return view('front.catalogue.scanner', compact('panier', 'pieces','produits'));
+            $produits = Tb_articles::whereIn('id', [3, 4, 5, 6, 7])->get();
+
+            return view('front.catalogue.scanner', compact('panier', 'pieces', 'produits'));
+
             
         }
+
+        // for ($i=0; $i < count($pieces)  ; $i++) {
+        //     # code...
+        //     $query = $classe;
+        //     $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~', '*'];
+        //     $piece = str_replace($reservedSymbols, '', $pieces);
+        //     $piece = implode('+',$piece);
+        //     $resultat = $resultat->concat($query->select('*')->selectRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE) AS relevance_score", [$piece])
+        //             ->whereRaw("MATCH (LibelleArticle) AGAINST (? IN BOOLEAN MODE)", $piece)
+        //             ->orderByDesc('relevance_score')->get());
+        // }
 
     }
 
@@ -248,14 +267,8 @@ class HomeController extends Controller
         $table = $table;
         $text = 'cp1';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
-
-
-
         $requete = " select * from ".$table." where ";
-
         $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
         foreach($result as $row)
         {
             $term = $row->Field;
@@ -263,26 +276,166 @@ class HomeController extends Controller
 
         }
         $requete = substr($requete,0,strlen($requete)-7);
+        $articles = collect($this->get_search_dynamique($requete)); // Remplacez "10" par le nombre d'articles que vous souhaitez afficher par page
 
-        $articles =  $this->get_search_dynamique($requete);
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
+
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        $classe = $articles["0"]->classe;
-        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises', 'classe'));
+        // $classe = $articles["0"]->classe;
+        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
     }
+
+    public function ps()
+    {
+        
+        # code...
+        $table = 'tb_articles';
+        $table = $table;
+        $text = 'PS';
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+        $requete = " select * from ".$table." where ";
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+        $articles = collect($this->get_search_dynamique($requete)); // Remplacez "10" par le nombre d'articles que vous souhaitez afficher par page
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+        // $classe = $articles["0"]->classe;
+        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function ms()
+    {
+        
+        # code...
+        $table = 'tb_articles';
+        $table = $table;
+        $text = 'MS';
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+        $requete = " select * from ".$table." where ";
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+        $articles = collect($this->get_search_dynamique($requete)); // Remplacez "10" par le nombre d'articles que vous souhaitez afficher par page
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+        // $classe = $articles["0"]->classe;
+        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function gs()
+    {
+        
+        # code...
+        $table = 'tb_articles';
+        $table = $table;
+        $text = 'GS';
+        $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
+        $requete = " select * from ".$table." where ";
+        $result =  DB::select("SHOW COLUMNS FROM ".$table."");
+        foreach($result as $row)
+        {
+            $term = $row->Field;
+            $requete =$requete.' '. $term.' like '. $text.'  OR   ';
+
+        }
+        $requete = substr($requete,0,strlen($requete)-7);
+        $articles = collect($this->get_search_dynamique($requete)); // Remplacez "10" par le nombre d'articles que vous souhaitez afficher par page
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
+
+        $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+        $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+        // $classe = $articles["0"]->classe;
+        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+    }
+
+    public function autocomplete()
+    {
+        $term = request()->get('term');
+
+        // Effectuez votre requête pour récupérer les suggestions d'autocomplétion
+        $suggestions = DB::table('tb_articles')
+            ->select('LibelleArticle') // Remplacez 'nom_colonne' par le nom de la colonne que vous souhaitez utiliser pour l'autocomplétion
+            ->where('LibelleArticle', 'LIKE', '%' . $term . '%')
+            ->get()
+            ->pluck('LibelleArticle');
+
+        return response()->json($suggestions);
+    }
+
 
     public function search()
     {
-        # code...
+        try {
+            # code...
         $table = 'tb_articles';
         $table = $table;
         $text = request()->get('search');
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
         $requete = " select * from ".$table." where ";
-
         $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
         foreach($result as $row)
         {
             $term = $row->Field;
@@ -291,12 +444,33 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
 
-        return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+        return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
+        } catch (\Exception $e) {
+            // $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
+            // $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
+            return view('front.error.error', [
+                'error' => $e->getMessage(),
+                'categories'=>typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get()
+            ]);
+        }
     }
 
     public function commandeSpeciale()
@@ -347,10 +521,24 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
+
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
     }
 
     public function ce1()
@@ -373,11 +561,24 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
     }
 
     public function ce2()
@@ -400,11 +601,24 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
     }
 
     public function cm1()
@@ -427,15 +641,24 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
-        //                          ->paginate(6);
-         //return response()->json($search);
-
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
     }
 
     public function cm2()
@@ -458,15 +681,25 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
-        // $articles = Tb_articles::where('IdTypeArticle', '=', $id)
-        //                          ->paginate(6);
-         //return response()->json($search);
 
-         return view('front.catalogue.fourniture', compact('articles', 'categories', 'entreprises'));
+         return view('front.catalogue.listeClasse', compact('articles', 'categories', 'entreprises'));
     }
 
     public function sixieme()
@@ -474,7 +707,7 @@ class HomeController extends Controller
         # code...
         $table = 'tb_articles';//request()->get('nomTable');
         $table = $table;
-        $text = '6ieme';//request()->get('text');
+        $text = '6ème';//request()->get('text');
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -489,7 +722,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
@@ -502,13 +748,10 @@ class HomeController extends Controller
         # code...
         $table = 'tb_articles';//request()->get('nomTable');
         $table = $table;
-        $text = '5ieme';//request()->get('text');
+        $text = '5ème';//request()->get('text');
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
         $requete = " select * from ".$table." where ";
-
         $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
         foreach($result as $row)
         {
             $term = $row->Field;
@@ -517,7 +760,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
@@ -528,15 +784,12 @@ class HomeController extends Controller
     public function quatrieme()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = '4ieme';//request()->get('text');
+        $text = '4ème';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
-
         $requete = " select * from ".$table." where ";
-
         $result =  DB::select("SHOW COLUMNS FROM ".$table."");
-
         foreach($result as $row)
         {
             $term = $row->Field;
@@ -545,7 +798,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
@@ -556,9 +822,9 @@ class HomeController extends Controller
     public function troisieme()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = '3ieme';//request()->get('text');
+        $text = '3ème';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -573,7 +839,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
@@ -584,9 +863,9 @@ class HomeController extends Controller
     public function seconde()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = '2nd';//request()->get('text');
+        $text = '2nd';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -601,7 +880,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
@@ -612,9 +904,9 @@ class HomeController extends Controller
     public function premiere()
     {
         # code...
-        $table = 'tb_articles';//request()->get('nomTable');
+        $table = 'tb_articles';
         $table = $table;
-        $text = '1ere';//request()->get('text');
+        $text = '1ère';
         $text = 'concat('."'".'%'."','".$text."','".'%'."'".')';
 
         $requete = " select * from ".$table." where ";
@@ -629,7 +921,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+         // Paginer la collection manuellement
+         $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+         $perPage = 9; // Nombre d'articles à afficher par page
+         $paginatedArticles = new LengthAwarePaginator(
+             $articles->forPage($currentPage, $perPage),
+             $articles->count(),
+             $perPage,
+             $currentPage,
+             ['path' => request()->url(), 'query' => request()->query()]
+         );
+ 
+         $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
@@ -657,7 +962,20 @@ class HomeController extends Controller
         }
         $requete = substr($requete,0,strlen($requete)-7);
 
-        $articles =  $this->get_search_dynamique($requete);
+        $articles =  collect($this->get_search_dynamique($requete));
+
+        // Paginer la collection manuellement
+        $currentPage = request()->query('page', 1); // Récupérer le numéro de page actuel depuis la requête
+        $perPage = 9; // Nombre d'articles à afficher par page
+        $paginatedArticles = new LengthAwarePaginator(
+            $articles->forPage($currentPage, $perPage),
+            $articles->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $articles = $paginatedArticles;
 
         $categories = typearticleModel::whereNull('type_parent_id')->with(['sous_types', 'sous_types.articles'])->orderBy('LibCategorieArt')->get();
         $entreprises = EntrepriseModel::orderBy('LibelleEntreprise')->get();
